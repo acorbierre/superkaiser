@@ -131,7 +131,7 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
                 className="flex items-center gap-1 cursor-pointer hover:text-[#333] transition-colors"
               >
                 Début
-                <span className="text-gray-400 transition-transform duration-200" style={{ display: 'inline-block', transform: sortAsc ? 'rotate(180deg)' : 'rotate(0deg)' }}>↓</span>
+                <span className="text-gray-400 transition-transform duration-200" style={{ display: 'inline-block', transform: sortAsc ? 'rotate(0deg)' : 'rotate(180deg)' }}>↓</span>
               </button>
             </th>
             <th className={TH}>Fin</th>
