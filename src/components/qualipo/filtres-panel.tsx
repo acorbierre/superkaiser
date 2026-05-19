@@ -5,6 +5,17 @@ import { Label } from '@/components/ui/label'
 import { Bell, Check, Clock, Calendar, Info, TriangleAlert, X } from 'lucide-react'
 import { BTN_PRIMARY } from '@/lib/styles'
 
+function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="relative group/tip inline-flex cursor-pointer">
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[280px] rounded bg-gray-900 px-3 py-2 text-[12px] leading-snug text-white opacity-0 group-hover/tip:opacity-100 transition-opacity z-50">
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export interface FiltresState {
   livresDiffuses: boolean
   livresEnAvance: boolean
@@ -149,7 +160,9 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 min={0}
               />
               <span className="text-[0.9375rem] text-gray-500">minutes</span>
-              <Info className="size-3.5 text-gray-400 shrink-0" />
+              <Tooltip label="Exemple : avec une tolérance de 2 minutes, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 8 minutes ou supérieure à 12 minutes.">
+                <Info className="size-4 text-gray-400 shrink-0" />
+              </Tooltip>
               <span className="text-[0.9375rem] text-gray-500">et</span>
               <input
                 type="number"
@@ -160,13 +173,18 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 max={100}
               />
               <span className="text-[0.9375rem] text-gray-500">%</span>
-              <Info className="size-3.5 text-gray-400 shrink-0" />
+              <Tooltip label="Exemple : avec une tolérance de 10%, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 9 minutes ou supérieure à 11 minutes.">
+                <Info className="size-4 text-gray-400 shrink-0" />
+              </Tooltip>
             </div>
           </div>
 
           <div className="pt-2 space-y-2">
             <p className="text-[0.9375rem] text-gray-600 flex items-center gap-1">
-              Personnaliser la tolérance d&apos;une émission <Info className="size-3.5 text-gray-400 shrink-0" />
+              Personnaliser la tolérance d&apos;une émission
+              <Tooltip label="Vous pouvez affiner la détection des durées incohérentes pour une ou plusieurs émissions en particulier.">
+                <Info className="size-4 text-gray-400 shrink-0" />
+              </Tooltip>
             </p>
             <span className="text-[0.9375rem] text-[#463acb] cursor-pointer hover:underline">+ Ajouter une émission</span>
           </div>
@@ -208,9 +226,12 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
             </div>
           </div>
 
-          <p className="text-xs text-gray-400">
-            Le chargement des résultats peut prendre plus de temps au-delà de X jours affichés
-          </p>
+          <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5">
+            <Info className="size-4 text-blue-500 shrink-0 mt-0.5" />
+            <p className="text-[0.875rem] text-blue-700 leading-snug">
+              Le chargement des résultats peut prendre plus de temps au-delà de X jours affichés.
+            </p>
+          </div>
         </div>
       </div>
 
