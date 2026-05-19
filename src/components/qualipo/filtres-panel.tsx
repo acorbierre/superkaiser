@@ -2,7 +2,7 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { Bell, Check, Clock, Calendar, TriangleAlert, X } from 'lucide-react'
+import { Bell, Check, Clock, Calendar, Info, TriangleAlert, X } from 'lucide-react'
 import { BTN_PRIMARY } from '@/lib/styles'
 
 export interface FiltresState {
@@ -60,7 +60,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               <Checkbox
                 checked={filtres.livresDiffuses}
                 onCheckedChange={v => set('livresDiffuses', !!v)}
-                className="size-6 rounded !border-0 data-checked:!bg-[#CFECD5] data-checked:!text-green-800"
+                className="size-6 rounded !border-0 !bg-[#CFECD5] text-transparent data-checked:!text-green-800"
               />
               <span className="text-[0.9375rem] text-gray-700">Livrés et diffusés</span>
               <Check className="size-4 text-[#25bc95] ml-auto shrink-0" />
@@ -70,7 +70,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               <Checkbox
                 checked={filtres.livresEnAvance}
                 onCheckedChange={v => set('livresEnAvance', !!v)}
-                className="size-6 rounded !border-0 data-checked:!bg-[#CFECD5] data-checked:!text-green-800"
+                className="size-6 rounded !border-0 !bg-[#CFECD5] text-transparent data-checked:!text-green-800"
               />
               <span className="text-[0.9375rem] text-gray-700">Livrés en avance</span>
               <Check className="size-4 text-[#25bc95] ml-auto shrink-0" />
@@ -80,7 +80,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               <Checkbox
                 checked={filtres.enAttente}
                 onCheckedChange={v => set('enAttente', !!v)}
-                className="size-6 rounded !border-0 data-checked:!bg-gray-200 data-checked:!text-gray-600"
+                className="size-6 rounded !border-0 !bg-gray-200 text-transparent data-checked:!text-gray-600"
               />
               <span className="text-[0.9375rem] text-gray-700">En attente de diffusion</span>
               <Clock className="size-4 text-gray-400 ml-auto shrink-0" />
@@ -90,7 +90,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               <Checkbox
                 checked={filtres.dureesIncoherentes}
                 onCheckedChange={v => set('dureesIncoherentes', !!v)}
-                className="size-6 rounded !border-0 data-checked:!bg-[#FFF2C6] data-checked:!text-yellow-800"
+                className="size-6 rounded !border-0 !bg-[#FFF2C6] text-transparent data-checked:!text-yellow-800"
               />
               <span className="text-[0.9375rem] text-gray-700">Livrés avec une durée incohérente</span>
               <TriangleAlert className="size-4 text-[#d36d27] ml-auto shrink-0" />
@@ -100,7 +100,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               <Checkbox
                 checked={filtres.nonDisponibles}
                 onCheckedChange={v => set('nonDisponibles', !!v)}
-                className="size-6 rounded !border-0 data-checked:!bg-[#FFB2B7] data-checked:!text-red-800"
+                className="size-6 rounded !border-0 !bg-[#FFB2B7] text-transparent data-checked:!text-red-800"
               />
               <span className="text-[0.9375rem] text-gray-700">Non disponibles</span>
               <X className="size-4 text-red-500 ml-auto shrink-0" />
@@ -145,28 +145,28 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 type="number"
                 value={filtres.toleranceMinutes}
                 onChange={e => set('toleranceMinutes', Number(e.target.value))}
-                className="w-14 h-8 border border-gray-300 rounded px-2 text-[0.9375rem] text-center"
+                className="w-16 h-9 border border-gray-300 rounded px-2 text-[0.9375rem] text-center"
                 min={0}
               />
               <span className="text-[0.9375rem] text-gray-500">minutes</span>
-              <span className="text-gray-400 text-xs">ℹ</span>
+              <Info className="size-3.5 text-gray-400 shrink-0" />
               <span className="text-[0.9375rem] text-gray-500">et</span>
               <input
                 type="number"
                 value={filtres.tolerancePct}
                 onChange={e => set('tolerancePct', Number(e.target.value))}
-                className="w-14 h-8 border border-gray-300 rounded px-2 text-[0.9375rem] text-center"
+                className="w-16 h-9 border border-gray-300 rounded px-2 text-[0.9375rem] text-center"
                 min={0}
                 max={100}
               />
               <span className="text-[0.9375rem] text-gray-500">%</span>
-              <span className="text-gray-400 text-xs">ℹ</span>
+              <Info className="size-3.5 text-gray-400 shrink-0" />
             </div>
           </div>
 
           <div className="pt-2 space-y-2">
             <p className="text-[0.9375rem] text-gray-600 flex items-center gap-1">
-              Personnaliser la tolérance d&apos;une émission <span className="text-gray-400 text-xs">ℹ</span>
+              Personnaliser la tolérance d&apos;une émission <Info className="size-3.5 text-gray-400 shrink-0" />
             </p>
             <span className="text-[0.9375rem] text-[#463acb] cursor-pointer hover:underline">+ Ajouter une émission</span>
           </div>
