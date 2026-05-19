@@ -235,10 +235,10 @@ export default function SidePanel({ son, onClose }: Props) {
       )}
 
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 z-40 animate-in fade-in duration-200" onClick={onClose} />
 
       {/* Panel */}
-      <div className="fixed top-[75px] right-0 h-[calc(100%-75px)] w-[640px] bg-[#fbfaff] z-50 flex flex-col shadow-[-8px_0_40px_rgba(0,0,0,0.1)]">
+      <div className="fixed top-[75px] right-0 h-[calc(100%-75px)] w-[640px] bg-[#fbfaff] z-50 flex flex-col shadow-[-8px_0_40px_rgba(0,0,0,0.1)] animate-in fade-in duration-200">
 
         {/* Bouton fermer */}
         <button

@@ -17,7 +17,7 @@ export default function TopNav() {
           <span className="text-[1rem] font-bold tracking-tight text-white">SuperKaiser</span>
         </div>
         <span className="text-[10px] font-bold border border-[#666] text-[#777] px-1 py-0.5 rounded leading-none">
-          PREPROD
+          PROTO
         </span>
       </div>
 

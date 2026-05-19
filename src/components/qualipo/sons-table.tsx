@@ -10,7 +10,7 @@ const ROW_BODY = 'h-[60px]'
 const ROW_HEAD = 'h-[40px]'
 const TH       = 'px-3 text-left text-[0.875rem] font-medium text-gray-500'
 const TD       = 'px-3 text-[15px] font-normal text-[#333] align-middle group-hover:bg-black/[0.04] transition-colors duration-200'
-const LINK_BOLD = `${LINK} font-semibold`
+const LINK_BOLD = `${LINK} font-medium`
 
 function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -75,6 +75,12 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
 
 export default function SonsTable({ sons, filtres, recherche, onSelectSon, loading }: Props) {
   const [overridden, setOverridden] = useState<Set<string>>(new Set())
+  const [sortAsc, setSortAsc] = useState(true)
+
+  function parseTime(t: string): number {
+    const [h, m] = t.split(':').map(Number)
+    return h * 60 + m
+  }
 
   function toggleOverride(id: string, e: React.MouseEvent) {
     e.stopPropagation()
@@ -89,7 +95,12 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
     return son.statut === 'duree_incoherente' && overridden.has(son.id) ? 'livre' : son.statut
   }
 
-  const filtered = sons.filter(s => matchesFiltres(s, filtres, recherche))
+  const filtered = sons
+    .filter(s => matchesFiltres(s, filtres, recherche))
+    .sort((a, b) => sortAsc
+      ? parseTime(a.debut) - parseTime(b.debut)
+      : parseTime(b.debut) - parseTime(a.debut)
+    )
 
   return (
     <div className="flex-1 overflow-auto relative">
@@ -100,21 +111,29 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
       )}
       <table className="w-full border-collapse table-fixed">
         <colgroup>
-          <col className="w-[68px]" />
-          <col className="w-[64px]" />
-          <col className="w-[64px]" />
+          <col className="w-[56px]" />
+          <col className="w-[52px]" />
+          <col className="w-[52px]" />
           <col className="w-[160px]" />
-          <col className="w-[160px]" />
+          <col className="w-[236px]" />
           <col className="w-[130px]" />
           <col className="w-[140px]" />
-          <col className="w-[280px]" />
+          <col className="w-[260px]" />
           <col className="w-[48px]" />
         </colgroup>
 
         <thead>
           <tr className={`${ROW_HEAD} bg-white border-b border-gray-200 sticky top-0 z-10`}>
             <th className={TH}>Date</th>
-            <th className={`${TH} whitespace-nowrap`}>Début <span className="text-gray-400">↓</span></th>
+            <th className={`${TH} whitespace-nowrap`}>
+              <button
+                onClick={() => setSortAsc(a => !a)}
+                className="flex items-center gap-1 cursor-pointer hover:text-[#333] transition-colors"
+              >
+                Début
+                <span className="text-gray-400 transition-transform duration-200" style={{ display: 'inline-block', transform: sortAsc ? 'rotate(180deg)' : 'rotate(0deg)' }}>↓</span>
+              </button>
+            </th>
             <th className={TH}>Fin</th>
             <th className={TH}>Émission</th>
             <th className={TH}>Titre</th>
@@ -132,10 +151,10 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
               onClick={() => onSelectSon?.(son)}
               className={`${ROW_BODY} group border-b cursor-pointer ${BG[effectiveStatut(son)]} ${BORDER[effectiveStatut(son)]}`}
             >
-              <td className={`${TD} whitespace-nowrap`}>{son.date}</td>
-              <td className={`${TD} whitespace-nowrap`}>{son.debut}</td>
-              <td className={`${TD} whitespace-nowrap`}>{son.fin}</td>
-              <td className={`${TD} font-semibold`}>{son.emission}</td>
+              <td className={`${TD} whitespace-nowrap font-light`}>{son.date}</td>
+              <td className={`${TD} whitespace-nowrap font-light`}>{son.debut}</td>
+              <td className={`${TD} whitespace-nowrap font-light`}>{son.fin}</td>
+              <td className={`${TD} font-semibold max-w-0`}><span className="block truncate">{son.emission}</span></td>
 
               {/* Titre — tronqué */}
               <td className={`${TD} max-w-0`}>
@@ -161,7 +180,7 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
               </td>
 
               {/* N° Magnétothèque */}
-              <td className={`${TD} whitespace-nowrap`}>
+              <td className={`${TD} whitespace-nowrap font-light`}>
                 <div className="flex items-center gap-1.5">
                   <span>{son.numeroMagnetotheque}</span>
                   <button
@@ -182,30 +201,22 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
               </td>
 
               {/* Statut */}
-              <td className={TD}><StatutCell son={{ ...son, statut: effectiveStatut(son) }} /></td>
+              <td className={`${TD} font-light`}><StatutCell son={{ ...son, statut: effectiveStatut(son) }} /></td>
 
               {/* Actions */}
               <td className={`${TD} text-center align-middle`}>
                 {son.statut === 'duree_incoherente' && (
-                  overridden.has(son.id) ? (
-                    <Tooltip label='Repasser en statut "Durée incohérente"'>
-                      <button
-                        onClick={e => toggleOverride(son.id, e)}
-                        className="p-1.5 rounded bg-[#463ACB] text-white hover:opacity-80 transition-opacity cursor-pointer"
-                      >
-                        <TriangleAlert className="size-4" />
-                      </button>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip label='Passer en statut "Livré"'>
-                      <button
-                        onClick={e => toggleOverride(son.id, e)}
-                        className="p-1.5 rounded bg-[#463ACB] text-white hover:opacity-80 transition-opacity cursor-pointer"
-                      >
-                        <Check className="size-4" />
-                      </button>
-                    </Tooltip>
-                  )
+                  <Tooltip label={overridden.has(son.id) ? 'Repasser en statut "Durée incohérente"' : 'Passer en statut "Livré"'}>
+                    <button
+                      onClick={e => toggleOverride(son.id, e)}
+                      className="p-1.5 rounded bg-[#463ACB] text-white hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                      <span className="relative size-4 block">
+                        <Check className={`size-4 absolute inset-0 transition-opacity duration-200 ${overridden.has(son.id) ? 'opacity-0' : 'opacity-100'}`} />
+                        <TriangleAlert className={`size-4 absolute inset-0 transition-opacity duration-200 ${overridden.has(son.id) ? 'opacity-100' : 'opacity-0'}`} />
+                      </span>
+                    </button>
+                  </Tooltip>
                 )}
               </td>
             </tr>

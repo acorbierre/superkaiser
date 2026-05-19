@@ -45,7 +45,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
   }
 
   return (
-    <div className="fixed top-[145px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-200 rounded-xl w-[1200px] shadow-[0_16px_60px_rgba(0,0,0,0.22)] [clip-path:inset(0_-100px_-100px_-100px)]">
+    <div className="fixed top-[145px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-200 rounded-xl w-[1200px] shadow-[0_16px_60px_rgba(0,0,0,0.22)] [clip-path:inset(0_-100px_-100px_-100px)] animate-in fade-in duration-200">
       <div className="py-8 grid grid-cols-3 divide-x divide-gray-200">
 
         {/* Colonne 1 — Types de sons */}
