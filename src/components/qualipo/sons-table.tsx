@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Check, Clock, Copy, ExternalLink, TriangleAlert, X } from 'lucide-react'
 import type { Son, StatutSon } from '@/data/sons'
 import type { FiltresState } from './filtres-panel'
@@ -76,6 +76,14 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
 export default function SonsTable({ sons, filtres, recherche, onSelectSon, loading }: Props) {
   const [overridden, setOverridden] = useState<Set<string>>(new Set())
   const [sortAsc, setSortAsc] = useState(true)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const handleCopy = useCallback((e: React.MouseEvent, son: Son) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(son.numeroMagnetotheque)
+    setCopiedId(son.id)
+    setTimeout(() => setCopiedId(null), 1500)
+  }, [])
 
   function parseTime(t: string): number {
     const [h, m] = t.split(':').map(Number)
@@ -184,10 +192,14 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
                 <div className="flex items-center gap-1.5">
                   <span>{son.numeroMagnetotheque}</span>
                   <button
-                    onClick={e => { e.stopPropagation(); navigator.clipboard.writeText(son.numeroMagnetotheque) }}
-                    className="text-[#333] hover:text-black transition-colors cursor-pointer"
+                    onClick={e => handleCopy(e, son)}
+                    className="transition-colors cursor-pointer"
+                    title="Copier"
                   >
-                    <Copy className="size-3.5" />
+                    {copiedId === son.id
+                      ? <Check className="size-3.5 text-green-600" />
+                      : <Copy className="size-3.5 text-gray-400 hover:text-black" />
+                    }
                   </button>
                 </div>
               </td>
