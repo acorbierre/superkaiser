@@ -12,12 +12,7 @@ const STATIONS = [
 
 const TYPES = ["Tous les types", "Antenne", "Web", "Externe"];
 
-type Suggestion = { titre: string; mid: string };
-
-const ALL_SUGGESTIONS: Suggestion[] = sons.map((s) => ({
-  titre: s.titre,
-  mid: s.numeroMagnetotheque,
-}));
+const ALL_EMISSIONS = Array.from(new Set(sons.map((s) => s.emission))).sort();
 
 const INPUT_CLS = "h-10 px-3 rounded border border-gray-300 bg-white text-[1rem] text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition";
 const LABEL_CLS = "text-[1rem] font-medium text-gray-700";
@@ -35,29 +30,27 @@ function SelectWrapper({ children, empty }: { children: React.ReactNode; empty: 
 }
 
 export default function DiffusionsSearch() {
-  const [search, setSearch] = useState("");
+  const [mid, setMid] = useState("");
+  const [emission, setEmission] = useState("");
   const [station, setStation] = useState("");
   const [date, setDate] = useState<Date | null>(null);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [type, setType] = useState("");
   const [rediffusion, setRediffusion] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [emissionOpen, setEmissionOpen] = useState(false);
 
-  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const emissionContainerRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const suggestions = search.length >= 1
-    ? ALL_SUGGESTIONS.filter((s) =>
-        s.titre.toLowerCase().includes(search.toLowerCase()) ||
-        s.mid.toLowerCase().includes(search.toLowerCase())
-      ).slice(0, 8)
+  const emissionSuggestions = emission.length >= 1
+    ? ALL_EMISSIONS.filter((e) => e.toLowerCase().includes(emission.toLowerCase())).slice(0, 8)
     : [];
 
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node))
-        setOpen(false);
+      if (emissionContainerRef.current && !emissionContainerRef.current.contains(e.target as Node))
+        setEmissionOpen(false);
       if (calendarRef.current && !calendarRef.current.contains(e.target as Node))
         setCalendarOpen(false);
     }
@@ -84,32 +77,42 @@ export default function DiffusionsSearch() {
             </SelectWrapper>
           </div>
 
-          {/* Titre ou MID */}
-          <div ref={searchContainerRef} className="col-span-2 flex flex-col gap-1.5 relative">
-            <label className={LABEL_CLS}>Titre ou MID (N°Magnétothèque ID)</label>
+          {/* Émission */}
+          <div ref={emissionContainerRef} className="flex flex-col gap-1.5 relative">
+            <label className={LABEL_CLS}>Émission</label>
             <input
               type="text"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setOpen(true); }}
-              onFocus={() => suggestions.length > 0 && setOpen(true)}
-              placeholder="Saisissez les premiers caractères..."
+              value={emission}
+              onChange={(e) => { setEmission(e.target.value); setEmissionOpen(true); }}
+              onFocus={() => emissionSuggestions.length > 0 && setEmissionOpen(true)}
+              placeholder="Saisissez les premières lettres..."
               className={INPUT_CLS}
             />
-            {open && (
+            {emissionOpen && emissionSuggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 overflow-hidden">
-                {suggestions.map((s) => (
-                  <button key={s.mid} type="button"
-                    onMouseDown={(e) => { e.preventDefault(); setSearch(s.titre); setOpen(false); }}
+                {emissionSuggestions.map((e) => (
+                  <button key={e} type="button"
+                    onMouseDown={(ev) => { ev.preventDefault(); setEmission(e); setEmissionOpen(false); }}
                     className="w-full text-left px-4 py-2.5 text-[1rem] text-gray-800 hover:bg-gray-100 transition-colors cursor-pointer flex items-center gap-3"
                   >
                     <img src="/stations/france-inter.svg" alt="France Inter" className="shrink-0 w-5 h-5 rounded-full" />
-                    <span className="flex-1 truncate">
-                      {s.titre} <span className="text-gray-400">— {s.mid}</span>
-                    </span>
+                    {e}
                   </button>
                 ))}
               </div>
             )}
+          </div>
+
+          {/* MID */}
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLS}>MID (Magnétothèque MID)</label>
+            <input
+              type="text"
+              value={mid}
+              onChange={(e) => setMid(e.target.value)}
+              placeholder="Saisissez les premiers chiffres..."
+              className={INPUT_CLS}
+            />
           </div>
         </div>
 
