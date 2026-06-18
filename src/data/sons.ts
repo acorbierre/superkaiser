@@ -41,12 +41,6 @@ export const STATUT_LABEL: Record<StatutSon, string> = {
   non_disponible:    'Son non disponible',
 }
 
-export const STATION = {
-  label: 'France Inter',
-  couleur: '#E2001A',
-  initiales: 'inter',
-}
-
 export const sons: Son[] = [
   {
     id: '1',

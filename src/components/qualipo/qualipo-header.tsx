@@ -1,175 +1,9 @@
-
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, CalendarDays, SlidersHorizontal, Search, RefreshCw, Maximize2, ChevronDown, Minus, Plus } from 'lucide-react'
 import FiltresPanel, { type FiltresState } from './filtres-panel'
 import { BTN_PRIMARY } from '@/lib/styles'
-import { STATION } from '@/data/sons'
-
-// ─── Datepicker ───────────────────────────────────────────────────────────────
-
-const MOIS = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.']
-const MOIS_LONGS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
-const JOURS_COURTS = ['lu','ma','me','je','ve','sa','di']
-const JOURS_LONGS = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche']
-
-function formatDate(d: Date) {
-  const dow = d.getDay() === 0 ? 6 : d.getDay() - 1 // 0=lundi
-  const label = JOURS_LONGS[dow]
-  return `${label.charAt(0).toUpperCase() + label.slice(1)} ${d.getDate()} ${MOIS_LONGS[d.getMonth()]} ${d.getFullYear()}`
-}
-
-function isSameDay(a: Date, b: Date) {
-  return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
-}
-
-function getCalendarDays(year: number, month: number): { date: Date; current: boolean }[] {
-  const firstDay = new Date(year, month, 1)
-  const startDow = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1 // 0=lundi
-  const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const daysInPrev = new Date(year, month, 0).getDate()
-
-  const cells: { date: Date; current: boolean }[] = []
-
-  // jours mois précédent
-  for (let i = startDow - 1; i >= 0; i--)
-    cells.push({ date: new Date(year, month - 1, daysInPrev - i), current: false })
-
-  // jours mois courant
-  for (let d = 1; d <= daysInMonth; d++)
-    cells.push({ date: new Date(year, month, d), current: true })
-
-  // compléter jusqu'à multiple de 7
-  const remaining = 7 - (cells.length % 7)
-  if (remaining < 7)
-    for (let d = 1; d <= remaining; d++)
-      cells.push({ date: new Date(year, month + 1, d), current: false })
-
-  return cells
-}
-
-function DatePicker({ selected, onChange, onClose }: {
-  selected: Date
-  onChange: (d: Date) => void
-  onClose: () => void
-}) {
-  const [viewYear, setViewYear] = useState(selected.getFullYear())
-  const [viewMonth, setViewMonth] = useState(selected.getMonth())
-  const [yearView, setYearView] = useState(false)
-  const [decadeStart, setDecadeStart] = useState(Math.floor(selected.getFullYear() / 12) * 12)
-
-  const cells = getCalendarDays(viewYear, viewMonth)
-  const today = new Date()
-
-  function prevMonth() {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1) }
-    else setViewMonth(m => m - 1)
-  }
-  function nextMonth() {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1) }
-    else setViewMonth(m => m + 1)
-  }
-
-  return (
-    <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-gray-100 p-5 w-[340px]">
-      {yearView ? (
-        <>
-          {/* Navigation décennie */}
-          <div className="flex items-center justify-between mb-3">
-            <button onClick={() => setDecadeStart(d => d - 12)} className="p-1.5 rounded hover:bg-gray-100 cursor-pointer transition-colors text-[#463acb]">
-              <ChevronLeft className="size-4" />
-            </button>
-            <span className="text-[15px] font-semibold text-[#463acb]">{decadeStart} — {decadeStart + 11}</span>
-            <button onClick={() => setDecadeStart(d => d + 12)} className="p-1.5 rounded hover:bg-gray-100 cursor-pointer transition-colors text-[#463acb]">
-              <ChevronRight className="size-4" />
-            </button>
-          </div>
-          <hr className="border-gray-100 mb-3" />
-          <div className="grid grid-cols-4 gap-1">
-            {Array.from({ length: 12 }, (_, i) => decadeStart + i).map(year => (
-              <button
-                key={year}
-                onClick={() => { setViewYear(year); setYearView(false) }}
-                className={`h-9 rounded-lg text-[14px] font-medium transition-colors cursor-pointer
-                  ${year === viewYear ? 'bg-[#463acb] text-white' : 'text-[#333] hover:bg-gray-100'}
-                  ${year === today.getFullYear() && year !== viewYear ? 'text-[#463acb]' : ''}
-                `}
-              >
-                {year}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Navigation mois */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-0.5">
-              <button onClick={prevMonth} className="p-1.5 rounded hover:bg-gray-100 cursor-pointer transition-colors text-[#463acb]">
-                <ChevronLeft className="size-4" />
-              </button>
-            </div>
-            <button
-              onClick={() => { setDecadeStart(Math.floor(viewYear / 12) * 12); setYearView(true) }}
-              className="text-[15px] font-semibold text-[#463acb] hover:underline cursor-pointer"
-            >
-              {MOIS[viewMonth]} <span className="font-bold">{viewYear}</span>
-            </button>
-            <div className="flex items-center gap-0.5">
-              <button onClick={nextMonth} className="p-1.5 rounded hover:bg-gray-100 cursor-pointer transition-colors text-[#463acb]">
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          </div>
-
-          <hr className="border-gray-100 mb-3" />
-
-          {/* Jours de la semaine */}
-          <div className="grid grid-cols-7 mb-1">
-            {JOURS_COURTS.map(j => (
-              <div key={j} className="text-center text-[13px] text-gray-400 py-1">{j}</div>
-            ))}
-          </div>
-
-          {/* Grille */}
-          <div className="grid grid-cols-7">
-            {cells.map(({ date, current }, idx) => {
-              const isSelected = isSameDay(date, selected)
-              const isToday = isSameDay(date, today)
-              return (
-                <button
-                  key={idx}
-                  onClick={() => { onChange(date); onClose() }}
-                  className={`
-                    text-[14px] h-9 w-full flex items-center justify-center rounded-lg transition-colors cursor-pointer
-                    ${isSelected ? 'bg-[#463acb] text-white font-semibold' : ''}
-                    ${!isSelected && isToday ? 'text-[#463acb] font-semibold' : ''}
-                    ${!isSelected && !current ? 'text-gray-300' : ''}
-                    ${!isSelected && current && !isToday ? 'text-[#333] hover:bg-gray-100' : ''}
-                    ${isSelected ? 'hover:bg-[#3b30b0]' : ''}
-                  `}
-                >
-                  {String(date.getDate()).padStart(2, '0')}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Aujourd'hui */}
-          <div className="mt-3">
-            <button
-              onClick={() => { onChange(today); onClose() }}
-              className={`${BTN_PRIMARY} w-full justify-center`}
-            >
-              Aujourd'hui
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  )
-}
-
-// ─── Header ───────────────────────────────────────────────────────────────────
+import { STATION } from '@/data/constants'
+import { DatePickerPopup, formatDate } from './date-picker'
 
 interface Props {
   filtres: FiltresState
@@ -217,6 +51,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
   return (
     <div className="relative">
       <div className="flex items-center gap-6 px-4 h-[70px] bg-white border-b border-gray-200">
+
         {/* Station */}
         <button className="flex items-center gap-2 shrink-0 cursor-pointer hover:bg-gray-50 rounded px-2 py-1 transition-colors">
           <div
@@ -231,10 +66,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
 
         {/* Navigation date + datepicker */}
         <div className="flex items-center gap-1">
-          <button
-            onClick={prevDay}
-            className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-          >
+          <button onClick={prevDay} className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer">
             <ChevronLeft className="size-4 text-gray-600" />
           </button>
 
@@ -250,19 +82,17 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
             {calendarOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setCalendarOpen(false)} />
-                <DatePicker
+                <DatePickerPopup
                   selected={selectedDate}
                   onChange={d => { setSelectedDate(d); onDateChange?.() }}
                   onClose={() => setCalendarOpen(false)}
+                  className="left-1/2 -translate-x-1/2"
                 />
               </>
             )}
           </div>
 
-          <button
-            onClick={nextDay}
-            className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-          >
+          <button onClick={nextDay} className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer">
             <ChevronRight className="size-4 text-gray-600" />
           </button>
         </div>

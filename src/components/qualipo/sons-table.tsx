@@ -4,24 +4,14 @@ import { Check, Clock, Copy, ExternalLink, TriangleAlert, X } from 'lucide-react
 import type { Son, StatutSon } from '@/data/sons'
 import type { FiltresState } from './filtres-panel'
 import { LINK } from '@/lib/styles'
+import { Tooltip } from '@/components/ui/tooltip'
 
 // ─── Styles factorisés ────────────────────────────────────────────────────────
-const ROW_BODY = 'h-[60px]'
-const ROW_HEAD = 'h-[40px]'
-const TH       = 'px-3 text-left text-[0.875rem] font-medium text-gray-500'
-const TD       = 'px-3 text-[15px] font-normal text-[#333] align-middle group-hover:bg-black/[0.04] transition-colors duration-200'
+const ROW_BODY  = 'h-[60px]'
+const ROW_HEAD  = 'h-[40px]'
+const TH        = 'px-3 text-left text-[0.875rem] font-medium text-gray-500'
+const TD        = 'px-3 text-[15px] font-normal text-[#333] align-middle group-hover:bg-black/[0.04] transition-colors duration-200'
 const LINK_BOLD = `${LINK} font-medium`
-
-function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="relative group/tip inline-flex">
-      {children}
-      <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-gray-900 px-3 py-1.5 text-[13px] leading-snug text-white opacity-0 group-hover/tip:opacity-100 transition-opacity z-50">
-        {label}
-      </span>
-    </div>
-  )
-}
 
 const BG: Record<StatutSon, string> = {
   livre:             'bg-[#CFECD5]',

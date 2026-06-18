@@ -2,19 +2,9 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { Tooltip } from '@/components/ui/tooltip'
 import { Bell, Check, Clock, Calendar, Info, TriangleAlert, X } from 'lucide-react'
 import { BTN_PRIMARY } from '@/lib/styles'
-
-function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="relative group/tip inline-flex cursor-pointer">
-      {children}
-      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[280px] rounded bg-gray-900 px-3 py-2 text-[12px] leading-snug text-white opacity-0 group-hover/tip:opacity-100 transition-opacity z-50">
-        {label}
-      </span>
-    </div>
-  )
-}
 
 export interface FiltresState {
   livresDiffuses: boolean
@@ -160,7 +150,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 min={0}
               />
               <span className="text-[0.9375rem] text-gray-500">minutes</span>
-              <Tooltip label="Exemple : avec une tolérance de 2 minutes, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 8 minutes ou supérieure à 12 minutes.">
+              <Tooltip align="center" width="w-[280px]" label="Exemple : avec une tolérance de 2 minutes, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 8 minutes ou supérieure à 12 minutes.">
                 <Info className="size-4 text-gray-400 shrink-0" />
               </Tooltip>
               <span className="text-[0.9375rem] text-gray-500">et</span>
@@ -173,7 +163,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 max={100}
               />
               <span className="text-[0.9375rem] text-gray-500">%</span>
-              <Tooltip label="Exemple : avec une tolérance de 10%, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 9 minutes ou supérieure à 11 minutes.">
+              <Tooltip align="center" width="w-[280px]" label="Exemple : avec une tolérance de 10%, un son de 10 minutes (attendues) déclenchera une alerte pour une durée (livrée) inférieure à 9 minutes ou supérieure à 11 minutes.">
                 <Info className="size-4 text-gray-400 shrink-0" />
               </Tooltip>
             </div>
@@ -182,7 +172,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
           <div className="pt-2 space-y-2">
             <p className="text-[0.9375rem] text-gray-600 flex items-center gap-1">
               Personnaliser la tolérance d&apos;une émission
-              <Tooltip label="Vous pouvez affiner la détection des durées incohérentes pour une ou plusieurs émissions en particulier.">
+              <Tooltip align="center" width="w-[280px]" label="Vous pouvez affiner la détection des durées incohérentes pour une ou plusieurs émissions en particulier.">
                 <Info className="size-4 text-gray-400 shrink-0" />
               </Tooltip>
             </p>

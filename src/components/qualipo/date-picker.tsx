@@ -38,10 +38,11 @@ function getCalendarDays(year: number, month: number): { date: Date; current: bo
   return cells
 }
 
-export function DatePickerPopup({ selected, onChange, onClose }: {
+export function DatePickerPopup({ selected, onChange, onClose, className = '' }: {
   selected: Date
   onChange: (d: Date) => void
   onClose: () => void
+  className?: string
 }) {
   const [viewYear, setViewYear] = useState(selected.getFullYear())
   const [viewMonth, setViewMonth] = useState(selected.getMonth())
@@ -60,7 +61,7 @@ export function DatePickerPopup({ selected, onChange, onClose }: {
   }
 
   return (
-    <div className="absolute left-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-gray-100 p-5 w-[340px]">
+    <div className={`absolute top-full mt-2 z-50 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-gray-100 p-5 w-[340px] ${className}`}>
       {yearView ? (
         <>
           <div className="flex items-center justify-between mb-3">

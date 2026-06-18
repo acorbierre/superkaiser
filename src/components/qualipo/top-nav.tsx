@@ -1,29 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
-const CONTENUS_ITEMS = [
-  { label: "Programmes",              enabled: false },
-  { label: "Diffusions",              enabled: true  },
-  { label: "Concerts",                enabled: false },
-  { label: "Replays",                 enabled: false },
-  { label: "Podcasts",                enabled: false },
-  { label: "Stations",                enabled: false },
-  null,
-  { label: "Gestion des expressions", enabled: false },
-  { label: "Editions des tags",       enabled: false },
-];
-
-const CONTENUS_PAGES = new Set([
-  "Programmes", "Diffusions", "Concerts", "Replays",
-  "Podcasts", "Stations", "Gestion des expressions", "Editions des tags",
-]);
-
-const NAV_LINKS = [
-  { label: "Grille des programmes", page: null },
-  { label: "Qualipo",               page: "Qualipo" },
-  { label: "RSS",                    page: null },
-  { label: "Streaming",              page: null },
-  { label: "Watchdog",               page: null },
-];
+import { CONTENUS_DROPDOWN, CONTENUS_PAGE_SET, TOP_NAV_LINKS } from "@/data/navigation";
 
 interface TopNavProps {
   currentPage: string;
@@ -36,9 +12,7 @@ function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate:
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -47,7 +21,7 @@ function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate:
   return (
     <div ref={ref} className="relative">
       <span
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(v => !v)}
         className={`text-[1rem] cursor-pointer select-none transition-colors ${active ? "text-white font-semibold" : "text-[#999] hover:text-white"}`}
       >
         Contenus
@@ -55,7 +29,7 @@ function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate:
 
       {open && (
         <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded shadow-xl z-50 py-1 overflow-hidden">
-          {CONTENUS_ITEMS.map((item, i) =>
+          {CONTENUS_DROPDOWN.map((item, i) =>
             item === null ? (
               <div key={i} className="my-1 border-t border-gray-200" />
             ) : (
@@ -76,7 +50,7 @@ function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate:
 }
 
 export default function TopNav({ currentPage, onNavigate }: TopNavProps) {
-  const isContenus = CONTENUS_PAGES.has(currentPage);
+  const isContenus = CONTENUS_PAGE_SET.has(currentPage);
 
   return (
     <nav className="h-[75px] bg-[#343A40] flex items-center px-4 gap-6 shrink-0 relative z-[60]">
@@ -93,16 +67,13 @@ export default function TopNav({ currentPage, onNavigate }: TopNavProps) {
 
       {/* Nav links */}
       <div className="flex items-center gap-6 flex-1">
-        {/* Grille des programmes */}
         <span className="text-[1rem] cursor-default select-none text-[#999]">
           Grille des programmes
         </span>
 
-        {/* Contenus dropdown */}
         <ContenusDropdown active={isContenus} onNavigate={onNavigate} />
 
-        {/* Autres onglets */}
-        {NAV_LINKS.slice(1).map(({ label, page }) => {
+        {TOP_NAV_LINKS.map(({ label, page }) => {
           const active = page === currentPage;
           const clickable = page !== null;
           return (
