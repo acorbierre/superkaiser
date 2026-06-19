@@ -26,8 +26,9 @@ export const CONTENUS_DROPDOWN: (ContenuPage | null)[] = [
 
 // Liens de la top nav rendus après le dropdown "Contenus"
 export const TOP_NAV_LINKS: { label: string; page: string | null }[] = [
-  { label: 'Qualipo',    page: 'Qualipo' },
-  { label: 'RSS',        page: null },
-  { label: 'Streaming',  page: null },
-  { label: 'Watchdog',   page: null },
+  { label: 'Qualipo',    page: 'Qualipo'    },
+  { label: 'RSS',        page: null         },
+  { label: 'Habillages', page: 'Habillages' },
+  { label: 'Streaming',  page: null         },
+  { label: 'Watchdog',   page: null         },
 ]

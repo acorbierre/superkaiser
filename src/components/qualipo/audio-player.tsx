@@ -8,9 +8,10 @@ interface Props {
   dureeLabel?: string
   onConserver?: () => void
   compact?: boolean
+  noBg?: boolean
 }
 
-export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConserver, compact = false }: Props) {
+export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConserver, compact = false, noBg = false }: Props) {
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
 
@@ -55,11 +56,9 @@ export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConser
   )
 
   if (compact) {
-    return (
-      <div className="px-4 py-3 rounded-xl bg-[#eef0ff]">
-        {controls}
-      </div>
-    )
+    return noBg
+      ? <div className="py-2">{controls}</div>
+      : <div className="px-4 py-3 rounded-xl bg-[#eef0ff]">{controls}</div>
   }
 
   return (

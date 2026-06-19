@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
+import { Menu } from "lucide-react";
 import { CONTENUS_DROPDOWN, CONTENUS_PAGE_SET, TOP_NAV_LINKS } from "@/data/navigation";
 
 interface TopNavProps {
   currentPage: string;
   onNavigate: (page: string) => void;
+  onOpenCatalog: () => void;
 }
 
 function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate: (page: string) => void }) {
@@ -49,11 +51,20 @@ function ContenusDropdown({ active, onNavigate }: { active: boolean; onNavigate:
   );
 }
 
-export default function TopNav({ currentPage, onNavigate }: TopNavProps) {
+export default function TopNav({ currentPage, onNavigate, onOpenCatalog }: TopNavProps) {
   const isContenus = CONTENUS_PAGE_SET.has(currentPage);
 
   return (
     <nav className="h-[75px] bg-[#343A40] flex items-center px-4 gap-6 shrink-0 relative z-[60]">
+      {/* Burger — catalogue de composants */}
+      <button
+        onClick={onOpenCatalog}
+        className="p-1.5 rounded text-[#999] hover:text-white hover:bg-white/10 transition-colors shrink-0"
+        title="Catalogue de composants"
+      >
+        <Menu className="size-5" />
+      </button>
+
       {/* Logo */}
       <div className="flex items-center gap-2 mr-4">
         <div className="flex items-center gap-1">

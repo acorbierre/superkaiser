@@ -1,5 +1,6 @@
 export const STATION = {
-  label:    'France Inter',
-  couleur:  '#E2001A',
-  initiales: 'inter',
+  label:     'France Culture',
+  couleur:   '#762B84',
+  initiales: 'culture',
+  logo:      '/stations/france-culture.svg',
 } as const
