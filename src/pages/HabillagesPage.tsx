@@ -14,7 +14,7 @@ const CONTENUS = [
 
 export default function HabillagesPage() {
   const { navigate } = useNavigation()
-  const [contenu, setContenu] = useState('emission')
+  const [contenu, setContenu] = useState('diffusion')
   const [recherche, setRecherche] = useState('')
 
   useEffect(() => { setRecherche('') }, [contenu])

@@ -20,11 +20,11 @@ const OUTILS: NavLink[] = [
 ]
 
 export default function NavDrawer({ onClose }: NavDrawerProps) {
-  const { navigate, page: currentPage } = useNavigation()
+  const { page: currentPage } = useNavigation()
 
   function goTo(e: React.MouseEvent, page: string) {
     e.preventDefault()
-    navigate(page)
+    window.open(`${window.location.pathname}#${page}`, '_blank')
     onClose()
   }
 

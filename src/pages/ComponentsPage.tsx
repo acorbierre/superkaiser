@@ -132,6 +132,13 @@ export default function ComponentsPage() {
                 <div className="size-6 rounded bg-blue-rf" />
                 <span className="text-xs text-gray-400 ml-1">bg-blue-rf/{'{'}20…100{'}'}</span>
               </div>
+              <div className="flex items-center gap-3 ml-4 border-l border-gray-200 pl-4">
+                <div className="size-10 rounded-md bg-blue-rf/10 shadow-sm border border-blue-rf/20" />
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-mono text-gray-500">bg-blue-rf/10</span>
+                  <span className="text-xs font-mono text-gray-500">ToggleGroup · CARD_BLUE</span>
+                </div>
+              </div>
             </div>
           </div>
         </Section>

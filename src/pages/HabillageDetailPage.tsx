@@ -124,7 +124,7 @@ export default function HabillageDetailPage() {
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
                   <label className={`${LABEL} flex items-center gap-1.5`}><Mic className="size-3.5" />Épisode</label>
-                  <div className="h-10 flex items-center justify-between px-3 rounded bg-blue-rf/10 text-[1rem] text-[#444]">
+                  <div className="h-10 flex items-center justify-between px-3 rounded bg-blue-rf/15 text-[1rem] text-[#444]">
                     <span className="truncate">{titre ?? '—'}</span>
                     <span className="flex-1 text-right text-sm text-[#444] ml-2">(13:00)</span>
                   </div>
