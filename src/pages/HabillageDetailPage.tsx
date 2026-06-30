@@ -4,6 +4,7 @@ import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { HabillageBloc } from '@/components/qualipo/habillage-bloc'
 import AudioPlayer from '@/components/qualipo/audio-player'
+import { InfoMessage } from '@/components/ui/info-message'
 import { BTN_PRIMARY, CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
@@ -15,7 +16,7 @@ function extractBR(programme: string): string {
 }
 
 export default function HabillageDetailPage() {
-  const { params } = useNavigation()
+  const { params, navigate } = useNavigation()
   const { titre, type } = params
   const [copied, setCopied] = useState(false)
 
@@ -119,6 +120,11 @@ export default function HabillageDetailPage() {
 
           {/* Colonne principale — habillage */}
           <div className="flex flex-col gap-4">
+            {type === 'emission' && (
+              <InfoMessage>
+                Par défaut, tous les épisodes de ce podcast hériteront de ces habillages. Ils peuvent toutefois être personnalisés au niveau de chaque épisode.
+              </InfoMessage>
+            )}
             <HabillageBloc showEpisode={type === 'diffusion'} />
             <button className={`${BTN_PRIMARY} self-start`}>Enregistrer</button>
           </div>
@@ -127,8 +133,9 @@ export default function HabillageDetailPage() {
           <div className={`${CARD} self-start`}>
             {type === 'emission' ? (
               <>
-                <ItemTitle>Diffusion</ItemTitle>
-                <a className={`${LINK} mt-3`}>Voir les diffusions</a>
+                <ItemTitle>Épisodes du podcast</ItemTitle>
+                <a className={`${LINK} mt-3`}>Voir la liste des diffusions</a>
+                <a className={`${LINK} mt-2`}>Voir le calendrier des épisodes</a>
               </>
             ) : (
               <>
@@ -138,9 +145,12 @@ export default function HabillageDetailPage() {
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
                 <hr className="border-gray-100 mt-6 mb-6" />
-                <ItemTitle>Podcast de diffusion</ItemTitle>
+                <ItemTitle>Podcast</ItemTitle>
                 {son?.detail.podcastPrincipalLabel
-                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.podcastPrincipalLabel}</p>
+                  ? <button
+                      onClick={() => navigate('HabillageDetail', { titre: son.emission, type: 'emission' })}
+                      className={`${LINK} mt-3`}
+                    >{son.detail.podcastPrincipalLabel}</button>
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
               </>
