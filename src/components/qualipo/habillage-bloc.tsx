@@ -12,11 +12,7 @@ interface HabillageBlockProps {
 }
 
 function Separator() {
-  return (
-    <div className="h-8 flex justify-center">
-      <div className="w-px h-full bg-blue-rf/25" />
-    </div>
-  )
+  return <div className="h-px bg-blue-rf/20" />
 }
 
 export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps) {
@@ -26,7 +22,7 @@ export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps
       <div className="mt-5 flex flex-col">
 
         {/* Pré-roll */}
-        <div className="rounded-[8px] p-6 flex flex-col gap-4 border border-blue-rf/20">
+        <div className="flex flex-col gap-4 py-6">
           <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightToLine className="size-4" />Pré-roll</span>}>
             <option>Xavier Mauduit - Intro Promo</option>
           </SelectField>
@@ -62,7 +58,7 @@ export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps
 
         {/* Épisode */}
         {showEpisode && (
-          <div className="rounded-[8px] p-6 flex flex-col gap-4 border border-blue-rf/20">
+          <div className="flex flex-col gap-4 py-6">
             <div className="flex flex-col gap-1">
               <label className={`${LABEL} flex items-center gap-1.5`}><Mic className="size-4" />Épisode</label>
               <div className="h-10 flex items-center justify-between px-3 rounded border border-gray-200 bg-white text-[1rem] text-gray-700">
@@ -77,7 +73,7 @@ export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps
         {showEpisode && <Separator />}
 
         {/* Post-roll */}
-        <div className="rounded-[8px] p-6 flex flex-col gap-4 border border-blue-rf/20">
+        <div className="flex flex-col gap-4 py-6">
           <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightFromLine className="size-4" />Post-roll</span>}>
             <option>Écoute série complète</option>
           </SelectField>
