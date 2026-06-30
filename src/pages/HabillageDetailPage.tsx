@@ -3,6 +3,7 @@ import { ArrowLeft, Copy, Check } from 'lucide-react'
 import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { HabillageBloc } from '@/components/qualipo/habillage-bloc'
+import AudioPlayer from '@/components/qualipo/audio-player'
 import { BTN_PRIMARY, CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
@@ -103,6 +104,11 @@ export default function HabillageDetailPage() {
                 )}
               </div>
 
+              {/* Player épisode (mode diffusion uniquement) */}
+              {type === 'diffusion' && (
+                <AudioPlayer compact noBg dureeLabel="00:13:00" />
+              )}
+
             </div>
           </div>
 
@@ -113,7 +119,7 @@ export default function HabillageDetailPage() {
 
           {/* Colonne principale — habillage */}
           <div className="flex flex-col gap-4">
-            <HabillageBloc titre={titre} showEpisode={type === 'diffusion'} />
+            <HabillageBloc showEpisode={type === 'diffusion'} />
             <button className={`${BTN_PRIMARY} self-start`}>Enregistrer</button>
           </div>
 

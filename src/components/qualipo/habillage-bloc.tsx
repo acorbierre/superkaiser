@@ -6,7 +6,6 @@ import { CARD, INPUT, LABEL } from '@/lib/styles'
 import { cn } from '@/lib/utils'
 
 interface HabillageBlockProps {
-  titre?: string
   showEpisode?: boolean
 }
 
@@ -41,7 +40,7 @@ function HabillageSection({ titre, showEpisode, isEpisode = false, episodeTitre 
       {/* Filet + paramètres */}
       {!isEpisode && (
         <><div className="h-px bg-gray-200 my-2" />
-        <div className={`grid gap-2 items-start ${!showEpisode ? 'grid-cols-2' : ''}`}>
+        <div className="grid gap-2 items-start">
           <div className="flex flex-col gap-1">
             <label className={LABEL}>Canaux de distribution</label>
             <div className="flex items-center gap-6 h-10">
@@ -56,7 +55,7 @@ function HabillageSection({ titre, showEpisode, isEpisode = false, episodeTitre 
             </div>
           </div>
           {!showEpisode && (
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-end" style={{ display: 'none' }}>
               <div className="flex flex-col gap-1 flex-1 min-w-0">
                 <label className={LABEL}>Du</label>
                 <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
@@ -74,15 +73,11 @@ function HabillageSection({ titre, showEpisode, isEpisode = false, episodeTitre 
   )
 }
 
-export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps) {
+export function HabillageBloc({ showEpisode = true }: HabillageBlockProps) {
   return (
     <div className="flex flex-col gap-4">
 
       <HabillageSection titre="Habillage Pré-roll" showEpisode={showEpisode} />
-
-      {showEpisode && (
-        <HabillageSection titre="Épisode" showEpisode={showEpisode} isEpisode episodeTitre={titre} />
-      )}
 
       <HabillageSection titre="Habillage Post-roll" showEpisode={showEpisode} />
 
