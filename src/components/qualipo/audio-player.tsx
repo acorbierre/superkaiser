@@ -9,9 +9,10 @@ interface Props {
   onConserver?: () => void
   compact?: boolean
   noBg?: boolean
+  noDurations?: boolean
 }
 
-export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConserver, compact = false, noBg = false }: Props) {
+export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConserver, compact = false, noBg = false, noDurations = false }: Props) {
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
 
@@ -39,9 +40,9 @@ export default function AudioPlayer({ fichier, dureeLabel = '00:13:00', onConser
           : <Play  className="size-5" style={{ fill: '#463acb', stroke: 'none' }} />
         }
       </button>
-      <span className="text-[13px] tabular-nums text-gray-500 shrink-0">{formatDuration(currentSecs)}</span>
+      {!noDurations && <span className="text-[13px] tabular-nums text-gray-500 shrink-0">{formatDuration(currentSecs)}</span>}
       {progressBar}
-      <span className="text-[13px] tabular-nums text-gray-500 shrink-0">{formatDuration(totalSecs)}</span>
+      {!noDurations && <span className="text-[13px] tabular-nums text-gray-500 shrink-0">{formatDuration(totalSecs)}</span>}
       {!compact && (
         <button className="text-[#463acb] shrink-0 cursor-pointer">
           <Download className="size-5" />

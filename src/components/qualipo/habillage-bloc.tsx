@@ -30,10 +30,12 @@ function HabillageSection({ titre, showEpisode, isEpisode = false, episodeTitre 
         </>
       ) : (
         <>
-          <SelectField>
-            <option>{titre === 'Habillage Pré-roll' ? 'Xavier Mauduit - Intro Promo' : 'Écoute série complète'}</option>
-          </SelectField>
-          <AudioPlayer compact noBg dureeLabel="00:00:11" />
+          <div className="grid grid-cols-2 gap-6 items-center">
+            <SelectField>
+              <option>{titre === 'Habillage Pré-roll' ? 'Xavier Mauduit - Intro Promo (7s)' : 'Écoute série complète (11s)'}</option>
+            </SelectField>
+            <AudioPlayer compact noBg noDurations dureeLabel="00:00:11" />
+          </div>
         </>
       )}
 
