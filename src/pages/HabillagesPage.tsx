@@ -6,6 +6,8 @@ import type { AutocompleteOption } from '@/components/ui/autocomplete'
 import { CARD, LABEL } from '@/lib/styles'
 import { sons } from '@/data/sons'
 import { useNavigation } from '@/contexts/navigation-context'
+import { STATION } from '@/data/constants'
+
 
 const CONTENUS = [
   { label: 'Émission',  value: 'emission'  },
@@ -21,11 +23,12 @@ export default function HabillagesPage() {
 
   const suggestions = useMemo<AutocompleteOption[]>(() => {
     if (contenu === 'emission') {
-      return [...new Set(sons.map(s => s.emission))].map(label => ({ label }))
+      return [...new Set(sons.map(s => s.emission))].map(label => ({ label, logo: STATION.logo }))
     }
     return sons.map(s => ({
       label: s.detail.titreComplet,
       sublabel: s.detail.diffuseAt,
+      logo: STATION.logo,
     }))
   }, [contenu])
 
@@ -57,7 +60,9 @@ export default function HabillagesPage() {
             </div>
           </div>
         </div>
-      </div>
+
+
+</div>
     </div>
   )
 }

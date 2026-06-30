@@ -2,7 +2,7 @@ import { LABEL, SELECT } from '@/lib/styles'
 import { cn } from '@/lib/utils'
 
 interface SelectFieldProps {
-  label: React.ReactNode
+  label?: React.ReactNode
   disabled?: boolean
   children: React.ReactNode
   className?: string
@@ -11,7 +11,7 @@ interface SelectFieldProps {
 export function SelectField({ label, disabled, children, className }: SelectFieldProps) {
   return (
     <div className={cn('flex flex-col gap-1', className)}>
-      <label className={cn(LABEL, disabled && 'opacity-50')}>{label}</label>
+      {label && <label className={cn(LABEL, disabled && 'opacity-50')}>{label}</label>}
       <div className="relative">
         <select className={SELECT} disabled={disabled}>
           {children}

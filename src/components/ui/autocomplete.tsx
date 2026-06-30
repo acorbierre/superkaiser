@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 export interface AutocompleteOption {
   label: string
   sublabel?: string
+  logo?: string
 }
 
 interface AutocompleteProps {
@@ -109,9 +110,14 @@ export function Autocomplete({ options, value, onChange, onSelect, placeholder, 
                 i === highlighted ? 'bg-blue-rf/5' : 'hover:bg-gray-50'
               }`}
             >
-              <div className="text-[15px] text-gray-800">{highlightMatch(opt.label)}</div>
+              <div className="flex items-center gap-2">
+                {opt.logo && (
+                  <img src={opt.logo} alt="" className="size-4 rounded-full object-cover shrink-0" />
+                )}
+                <div className="text-[15px] text-gray-800">{highlightMatch(opt.label)}</div>
+              </div>
               {opt.sublabel && (
-                <div className="text-xs text-gray-400 mt-0.5">{opt.sublabel}</div>
+                <div className="text-xs text-gray-400 mt-0.5 ml-6">{opt.sublabel}</div>
               )}
             </button>
           ))}

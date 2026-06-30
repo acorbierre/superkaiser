@@ -1,49 +1,114 @@
 import { ArrowRightToLine, ArrowRightFromLine, Mic } from 'lucide-react'
 import { CardTitle } from '@/components/ui/card-title'
 import { SelectField } from '@/components/ui/select-field'
+import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { CARD_BLUE, LABEL } from '@/lib/styles'
+import { INPUT, LABEL } from '@/lib/styles'
+import { cn } from '@/lib/utils'
 
 interface HabillageBlockProps {
   titre?: string
   showEpisode?: boolean
 }
 
+function Separator() {
+  return (
+    <div className="h-8 flex justify-center">
+      <div className="w-px h-full bg-blue-rf/25" />
+    </div>
+  )
+}
+
 export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps) {
   return (
     <>
-      <CardTitle className="text-gray-900 mt-8">Habillage</CardTitle>
-      <div className={`${CARD_BLUE} mt-4`}>
-        <div className={`grid gap-6 ${showEpisode ? 'grid-cols-3' : 'grid-cols-2'}`}>
+      <CardTitle>Habillage</CardTitle>
+      <div className="mt-5 flex flex-col">
 
+        {/* Pré-roll */}
+        <div className="rounded-[8px] p-6 flex flex-col gap-4 bg-blue-rf/10">
+          <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightToLine className="size-4" />Pré-roll</span>}>
+            <option>Xavier Mauduit - Intro Promo</option>
+          </SelectField>
+          <AudioPlayer compact noBg dureeLabel="00:00:11" />
           <div className="flex flex-col gap-2">
-            <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightToLine className="size-3.5" />Pré-roll</span>}>
-              <option>Xavier Mauduit - Intro Promo</option>
-            </SelectField>
-            <AudioPlayer compact noBg dureeLabel="00:00:11" />
+            <label className={LABEL}>Canaux de distribution</label>
+            <div className="flex items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Switch defaultChecked />
+                <span className="text-sm text-gray-700">Interne</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Switch />
+                <span className="text-sm text-gray-700">Externe</span>
+              </label>
+            </div>
           </div>
-
-          {showEpisode && (
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col gap-1">
-                <label className={`${LABEL} flex items-center gap-1.5`}><Mic className="size-3.5" />Épisode</label>
-                <div className="h-10 flex items-center justify-between px-3 rounded bg-blue-rf/10 text-[1rem] text-[#444]">
-                  <span className="truncate">{titre ?? '—'}</span>
-                  <span className="flex-1 text-right text-sm text-[#444] ml-2">(13:00)</span>
-                </div>
+          {!showEpisode && (
+            <div className="flex items-end gap-3">
+              <div className="flex flex-col gap-1 flex-1">
+                <label className={LABEL}>Du</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
               </div>
-              <AudioPlayer compact noBg dureeLabel="00:13:00" />
+              <div className="flex flex-col gap-1 flex-1">
+                <label className={LABEL}>Au</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-30" />
+              </div>
             </div>
           )}
-
-          <div className="flex flex-col gap-2">
-            <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightFromLine className="size-3.5" />Post-roll</span>}>
-              <option>Écoute série complète</option>
-            </SelectField>
-            <AudioPlayer compact noBg dureeLabel="00:00:11" />
-          </div>
-
         </div>
+
+        <Separator />
+
+        {/* Épisode */}
+        {showEpisode && (
+          <div className="rounded-[8px] p-6 flex flex-col gap-4 bg-gray-50 border border-blue-rf/25">
+            <div className="flex flex-col gap-1">
+              <label className={`${LABEL} flex items-center gap-1.5`}><Mic className="size-4" />Épisode</label>
+              <div className="h-10 flex items-center justify-between px-3 rounded border border-gray-200 bg-white text-[1rem] text-gray-700">
+                <span className="truncate">{titre ?? '—'}</span>
+                <span className="text-sm text-gray-400 ml-2 shrink-0">13:00</span>
+              </div>
+            </div>
+            <AudioPlayer compact noBg dureeLabel="00:13:00" />
+          </div>
+        )}
+
+        {showEpisode && <Separator />}
+
+        {/* Post-roll */}
+        <div className="rounded-[8px] p-6 flex flex-col gap-4 bg-blue-rf/10">
+          <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightFromLine className="size-4" />Post-roll</span>}>
+            <option>Écoute série complète</option>
+          </SelectField>
+          <AudioPlayer compact noBg dureeLabel="00:00:11" />
+          <div className="flex flex-col gap-2">
+            <label className={LABEL}>Canaux de distribution</label>
+            <div className="flex items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Switch defaultChecked />
+                <span className="text-sm text-gray-700">Interne</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Switch />
+                <span className="text-sm text-gray-700">Externe</span>
+              </label>
+            </div>
+          </div>
+          {!showEpisode && (
+            <div className="flex items-end gap-3">
+              <div className="flex flex-col gap-1 flex-1">
+                <label className={LABEL}>Du</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
+              </div>
+              <div className="flex flex-col gap-1 flex-1">
+                <label className={LABEL}>Au</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-30" />
+              </div>
+            </div>
+          )}
+        </div>
+
       </div>
     </>
   )

@@ -83,9 +83,6 @@ export default function HabillageDetailPage() {
 
               {/* Métadonnées */}
               <div className="flex flex-col gap-1 text-sm text-gray-500">
-                {son?.detail.diffuseAt && (
-                  <span>Diffusé le {son.detail.diffuseAt}</span>
-                )}
                 {type === 'diffusion' && son?.numeroMagnetotheque && (
                   <div className="flex items-center gap-1.5">
                     <span>Numéro Magnétothèque (MID) : {son.numeroMagnetotheque}</span>
@@ -109,26 +106,31 @@ export default function HabillageDetailPage() {
             </div>
           </div>
 
-          {/* Section Habillage */}
-          <HabillageBloc titre={titre} showEpisode={type === 'diffusion'} />
         </div>
 
-        {/* Card 2 */}
-        <div className={`${CARD} mt-4`}>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-2">
-              <ItemTitle>Fil de diffusion</ItemTitle>
-            </div>
-            <div className="flex flex-col gap-2 border-l border-gray-100 pl-8">
-              <ItemTitle>Canaux de diffusion</ItemTitle>
-            </div>
-            <div className="flex flex-col gap-2 border-t border-gray-100 pt-8">
-              <ItemTitle>Contexte</ItemTitle>
-            </div>
-            <div className="flex flex-col gap-2 border-t border-l border-gray-100 pt-8 pl-8">
-              <ItemTitle>Dates de validité</ItemTitle>
-            </div>
+        {/* 2 colonnes : habillage + sidebar */}
+        <div className="grid grid-cols-[1fr_320px] gap-4 mt-4">
+
+          {/* Colonne principale — habillage */}
+          <div className={CARD}>
+            <HabillageBloc titre={titre} showEpisode={type === 'diffusion'} />
           </div>
+
+          {/* Sidebar */}
+          <div className={`${CARD} self-start`}>
+            <ItemTitle>Date de diffusion</ItemTitle>
+            {son?.detail.diffuseAt
+              ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
+              : <p className="mt-3 text-sm text-gray-400">—</p>
+            }
+            <hr className="border-gray-100 mt-6 mb-6" />
+            <ItemTitle>Podcast de diffusion</ItemTitle>
+            {son?.detail.podcastPrincipalLabel
+              ? <p className="mt-3 text-sm text-gray-600">{son.detail.podcastPrincipalLabel}</p>
+              : <p className="mt-3 text-sm text-gray-400">—</p>
+            }
+          </div>
+
         </div>
 
       </div>
