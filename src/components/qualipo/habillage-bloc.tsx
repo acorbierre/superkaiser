@@ -1,9 +1,8 @@
-import { ArrowRightToLine, ArrowRightFromLine, Mic } from 'lucide-react'
-import { CardTitle } from '@/components/ui/card-title'
+import { ItemTitle } from '@/components/ui/item-title'
 import { SelectField } from '@/components/ui/select-field'
 import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { INPUT, LABEL } from '@/lib/styles'
+import { CARD, INPUT, LABEL } from '@/lib/styles'
 import { cn } from '@/lib/utils'
 
 interface HabillageBlockProps {
@@ -11,101 +10,82 @@ interface HabillageBlockProps {
   showEpisode?: boolean
 }
 
-function Separator() {
-  return <div className="h-px bg-blue-rf/20" />
+function HabillageSection({ titre, showEpisode, isEpisode = false, episodeTitre }: {
+  titre: string
+  showEpisode: boolean
+  isEpisode?: boolean
+  episodeTitre?: string
+}) {
+  return (
+    <div className={`${CARD} flex flex-col gap-4`}>
+      <ItemTitle>{titre}</ItemTitle>
+
+      {/* Son */}
+      {isEpisode ? (
+        <>
+          <p className="text-[1rem] text-gray-800">
+            {episodeTitre ?? '—'}{' '}
+            <span className="text-gray-400 text-sm">(13m00s)</span>
+          </p>
+          <AudioPlayer compact noBg dureeLabel="00:13:00" />
+        </>
+      ) : (
+        <>
+          <SelectField>
+            <option>{titre === 'Habillage Pré-roll' ? 'Xavier Mauduit - Intro Promo' : 'Écoute série complète'}</option>
+          </SelectField>
+          <AudioPlayer compact noBg dureeLabel="00:00:11" />
+        </>
+      )}
+
+      {/* Filet + paramètres */}
+      {!isEpisode && (
+        <><div className="h-px bg-gray-200 my-2" />
+        <div className={`grid gap-2 items-start ${!showEpisode ? 'grid-cols-2' : ''}`}>
+          <div className="flex flex-col gap-1">
+            <label className={LABEL}>Canaux de distribution</label>
+            <div className="flex items-center gap-6 h-10">
+              <label className="flex items-center gap-1 cursor-pointer">
+                <Switch defaultChecked />
+                <span className="text-sm text-gray-700">Interne</span>
+              </label>
+              <label className="flex items-center gap-1 cursor-pointer">
+                <Switch defaultChecked />
+                <span className="text-sm text-gray-700">Externe</span>
+              </label>
+            </div>
+          </div>
+          {!showEpisode && (
+            <div className="flex gap-2 items-end">
+              <div className="flex flex-col gap-1 flex-1 min-w-0">
+                <label className={LABEL}>Du</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
+              </div>
+              <div className="flex flex-col gap-1 flex-1 min-w-0">
+                <label className={LABEL}>Au</label>
+                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-30" />
+              </div>
+            </div>
+          )}
+        </div></>
+      )}
+
+    </div>
+  )
 }
 
 export function HabillageBloc({ titre, showEpisode = true }: HabillageBlockProps) {
   return (
-    <>
-      <CardTitle>Habillage</CardTitle>
-      <div className="mt-5 flex flex-col">
+    <div className="flex flex-col gap-4">
 
-        {/* Pré-roll */}
-        <div className="flex flex-col gap-4 py-6">
-          <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightToLine className="size-4" />Pré-roll</span>}>
-            <option>Xavier Mauduit - Intro Promo</option>
-          </SelectField>
-          <AudioPlayer compact noBg dureeLabel="00:00:11" />
-          <div className="flex flex-col gap-2">
-            <label className={LABEL}>Canaux de distribution</label>
-            <div className="flex items-center gap-6">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Switch defaultChecked />
-                <span className="text-sm text-gray-700">Interne</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Switch defaultChecked />
-                <span className="text-sm text-gray-700">Externe</span>
-              </label>
-            </div>
-          </div>
-          {!showEpisode && (
-            <div className="flex items-end gap-3">
-              <div className="flex flex-col gap-1 flex-1">
-                <label className={LABEL}>Du</label>
-                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
-              </div>
-              <div className="flex flex-col gap-1 flex-1">
-                <label className={LABEL}>Au</label>
-                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-30" />
-              </div>
-            </div>
-          )}
-        </div>
+      <HabillageSection titre="Habillage Pré-roll" showEpisode={showEpisode} />
 
-        <Separator />
+      {showEpisode && (
+        <HabillageSection titre="Épisode" showEpisode={showEpisode} isEpisode episodeTitre={titre} />
+      )}
 
-        {/* Épisode */}
-        {showEpisode && (
-          <div className="flex flex-col gap-4 py-6">
-            <div className="flex flex-col gap-1">
-              <label className={`${LABEL} flex items-center gap-1.5`}><Mic className="size-4" />Épisode</label>
-              <div className="h-10 flex items-center justify-between px-3 rounded border border-gray-200 bg-white text-[1rem] text-gray-700">
-                <span className="truncate">{titre ?? '—'}</span>
-                <span className="text-sm text-gray-400 ml-2 shrink-0">13:00</span>
-              </div>
-            </div>
-            <AudioPlayer compact noBg dureeLabel="00:13:00" />
-          </div>
-        )}
+      <HabillageSection titre="Habillage Post-roll" showEpisode={showEpisode} />
 
-        {showEpisode && <Separator />}
-
-        {/* Post-roll */}
-        <div className="flex flex-col gap-4 py-6">
-          <SelectField label={<span className="flex items-center gap-1.5"><ArrowRightFromLine className="size-4" />Post-roll</span>}>
-            <option>Écoute série complète</option>
-          </SelectField>
-          <AudioPlayer compact noBg dureeLabel="00:00:11" />
-          <div className="flex flex-col gap-2">
-            <label className={LABEL}>Canaux de distribution</label>
-            <div className="flex items-center gap-6">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Switch defaultChecked />
-                <span className="text-sm text-gray-700">Interne</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <Switch defaultChecked />
-                <span className="text-sm text-gray-700">Externe</span>
-              </label>
-            </div>
-          </div>
-          {!showEpisode && (
-            <div className="flex items-end gap-3">
-              <div className="flex flex-col gap-1 flex-1">
-                <label className={LABEL}>Du</label>
-                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-01" />
-              </div>
-              <div className="flex flex-col gap-1 flex-1">
-                <label className={LABEL}>Au</label>
-                <input type="date" className={cn(INPUT, 'w-full')} defaultValue="2025-06-30" />
-              </div>
-            </div>
-          )}
-        </div>
-
-      </div>
-    </>
+    </div>
   )
 }

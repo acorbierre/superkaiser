@@ -3,7 +3,7 @@ import { ArrowLeft, Copy, Check } from 'lucide-react'
 import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { HabillageBloc } from '@/components/qualipo/habillage-bloc'
-import { CARD } from '@/lib/styles'
+import { BTN_PRIMARY, CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
 import { STATION } from '@/data/constants'
@@ -112,23 +112,33 @@ export default function HabillageDetailPage() {
         <div className="grid grid-cols-[1fr_320px] gap-4 mt-4">
 
           {/* Colonne principale — habillage */}
-          <div className={CARD}>
+          <div className="flex flex-col gap-4">
             <HabillageBloc titre={titre} showEpisode={type === 'diffusion'} />
+            <button className={`${BTN_PRIMARY} self-start`}>Enregistrer</button>
           </div>
 
           {/* Sidebar */}
           <div className={`${CARD} self-start`}>
-            <ItemTitle>Date de diffusion</ItemTitle>
-            {son?.detail.diffuseAt
-              ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
-              : <p className="mt-3 text-sm text-gray-400">—</p>
-            }
-            <hr className="border-gray-100 mt-6 mb-6" />
-            <ItemTitle>Podcast de diffusion</ItemTitle>
-            {son?.detail.podcastPrincipalLabel
-              ? <p className="mt-3 text-sm text-gray-600">{son.detail.podcastPrincipalLabel}</p>
-              : <p className="mt-3 text-sm text-gray-400">—</p>
-            }
+            {type === 'emission' ? (
+              <>
+                <ItemTitle>Diffusion</ItemTitle>
+                <a className={`${LINK} mt-3`}>Voir les diffusions</a>
+              </>
+            ) : (
+              <>
+                <ItemTitle>Date de diffusion</ItemTitle>
+                {son?.detail.diffuseAt
+                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
+                  : <p className="mt-3 text-sm text-gray-400">—</p>
+                }
+                <hr className="border-gray-100 mt-6 mb-6" />
+                <ItemTitle>Podcast de diffusion</ItemTitle>
+                {son?.detail.podcastPrincipalLabel
+                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.podcastPrincipalLabel}</p>
+                  : <p className="mt-3 text-sm text-gray-400">—</p>
+                }
+              </>
+            )}
           </div>
 
         </div>
