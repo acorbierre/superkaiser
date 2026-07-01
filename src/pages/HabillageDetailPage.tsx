@@ -144,6 +144,11 @@ export default function HabillageDetailPage() {
                   ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
+                <div className="mt-6"><ItemTitle>Date de libération du son</ItemTitle></div>
+                {son?.detail.diffuseAt
+                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
+                  : <p className="mt-3 text-sm text-gray-400">—</p>
+                }
                 <hr className="border-gray-100 mt-6 mb-6" />
                 <ItemTitle>Podcast</ItemTitle>
                 {son?.detail.podcastPrincipalLabel
@@ -153,6 +158,7 @@ export default function HabillageDetailPage() {
                     >{son.detail.podcastPrincipalLabel}</button>
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
+                <a className={`${LINK} mt-2`}>Voir le calendrier des épisodes</a>
               </>
             )}
           </div>
