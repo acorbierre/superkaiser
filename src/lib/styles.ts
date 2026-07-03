@@ -8,5 +8,5 @@ export const CARD_BLUE     = 'rounded-xl bg-blue-rf/10 p-10'
 
 // Formulaires
 export const INPUT  = 'h-10 px-3 rounded border border-gray-300 bg-white text-[1rem] text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
-export const LABEL  = 'text-[1rem] font-medium text-gray-700'
+export const LABEL  = 'text-[15px] font-normal text-gray-700'
 export const SELECT = 'w-full h-10 pl-3 pr-8 rounded border border-gray-300 bg-white text-[1rem] outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
