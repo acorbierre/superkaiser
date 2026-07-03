@@ -125,7 +125,7 @@ export default function HabillageDetailPage() {
                 Par défaut, tous les épisodes de ce podcast hériteront de ces habillages. Ils peuvent toutefois être personnalisés au niveau de chaque épisode.
               </InfoMessage>
             )}
-            <HabillageBloc showEpisode={type === 'diffusion'} />
+            <HabillageBloc />
             <button className={`${BTN_PRIMARY} self-start`}>Enregistrer</button>
           </div>
 
@@ -135,7 +135,7 @@ export default function HabillageDetailPage() {
               <>
                 <ItemTitle>Épisodes du podcast</ItemTitle>
                 <a className={`${LINK} mt-3`}>Voir la liste des diffusions</a>
-                <a className={`${LINK} mt-2`}>Voir le calendrier des épisodes</a>
+                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}>Voir le calendrier des épisodes</button>
               </>
             ) : (
               <>
@@ -158,7 +158,7 @@ export default function HabillageDetailPage() {
                     >{son.detail.podcastPrincipalLabel}</button>
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
-                <a className={`${LINK} mt-2`}>Voir le calendrier des épisodes</a>
+                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}>Voir le calendrier des épisodes</button>
               </>
             )}
           </div>
