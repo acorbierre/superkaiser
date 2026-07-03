@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PageTitle } from '@/components/ui/page-title'
+import { HoverCard } from '@/components/ui/hover-card'
 import { useNavigation } from '@/contexts/navigation-context'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -35,15 +36,15 @@ function getMockEpisodes(monthDate: Date) {
   const y = monthDate.getFullYear()
   const m = monthDate.getMonth()
   return [
-    { id: 1, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 2),  preRoll: true,  postRoll: true  },
-    { id: 2, titre: 'La forêt amazonienne',                heure: '14:00', date: new Date(y, m, 5),  preRoll: true,  postRoll: false },
-    { id: 3, titre: 'Les pionniers de l\'électronique',    heure: '09:00', date: new Date(y, m, 9),  preRoll: false, postRoll: true  },
-    { id: 4, titre: 'Nuits blanches à Reykjavik',          heure: '09:00', date: new Date(y, m, 12), preRoll: false, postRoll: false },
-    { id: 5, titre: 'Histoire du jazz en France',          heure: '14:00', date: new Date(y, m, 16), preRoll: true,  postRoll: true  },
-    { id: 6, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 19), preRoll: true,  postRoll: false },
-    { id: 7, titre: 'Le mystère des marées',               heure: '09:00', date: new Date(y, m, 23), preRoll: false, postRoll: false },
-    { id: 8, titre: 'Nuits de France Culture — Archives',  heure: '00:00', date: new Date(y, m, 26), preRoll: false, postRoll: true  },
-    { id: 9, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 30), preRoll: true,  postRoll: true  },
+    { id: 1, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 2),  redistribution: true,  preRoll: true,  preRollSon: 'Xavier Mauduit - Intro Promo (7s)',  postRoll: true,  postRollSon: 'Écoute série complète (11s)' },
+    { id: 2, titre: 'La forêt amazonienne',                heure: '14:00', date: new Date(y, m, 5),  redistribution: false, preRoll: true,  preRollSon: 'Générique court (4s)',              postRoll: false, postRollSon: null },
+    { id: 3, titre: 'Les pionniers de l\'électronique',    heure: '09:00', date: new Date(y, m, 9),  redistribution: true,  preRoll: false, preRollSon: null,                                postRoll: true,  postRollSon: 'Abonnez-vous (8s)' },
+    { id: 4, titre: 'Nuits blanches à Reykjavik',          heure: '09:00', date: new Date(y, m, 12), redistribution: false, preRoll: false, preRollSon: null,                                postRoll: false, postRollSon: null },
+    { id: 5, titre: 'Histoire du jazz en France',          heure: '14:00', date: new Date(y, m, 16), redistribution: true,  preRoll: true,  preRollSon: 'Intro musique (10s)',               postRoll: true,  postRollSon: 'Écoute série complète (11s)' },
+    { id: 6, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 19), redistribution: false, preRoll: true,  preRollSon: 'Xavier Mauduit - Intro Promo (7s)', postRoll: false, postRollSon: null },
+    { id: 7, titre: 'Le mystère des marées',               heure: '09:00', date: new Date(y, m, 23), redistribution: false, preRoll: false, preRollSon: null,                                postRoll: false, postRollSon: null },
+    { id: 8, titre: 'Nuits de France Culture — Archives',  heure: '00:00', date: new Date(y, m, 26), redistribution: true,  preRoll: false, preRollSon: null,                                postRoll: true,  postRollSon: 'Abonnez-vous (8s)' },
+    { id: 9, titre: 'Grande traversée des Alpes',          heure: '09:00', date: new Date(y, m, 30), redistribution: false, preRoll: true,  preRollSon: 'Générique court (4s)',              postRoll: true,  postRollSon: 'Intro musique (10s)' },
   ].filter(e => e.date.getMonth() === m)
 }
 
@@ -67,7 +68,7 @@ export default function CalendrierPage() {
       <div className="px-6 py-8">
 
         {/* Calendrier */}
-        <div className="bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.07)] overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.07)]">
 
           {/* Header : retour + titre centré + nav mois */}
           <div className="px-6 py-5 flex items-center border-b border-gray-100">
@@ -121,23 +122,47 @@ export default function CalendrierPage() {
                   </span>
 
                   {dayEpisodes.map(ep => (
-                    <button
+                    <HoverCard
                       key={ep.id}
-                      onClick={() => navigate('HabillageDetail', { titre: ep.titre, type: 'diffusion' })}
-                      className="w-full text-left rounded text-[14px] px-1.5 py-1 flex flex-col gap-0.5 cursor-pointer hover:brightness-95 transition-all"
-                      style={{ backgroundColor: '#DBEAFF', borderLeft: '3px solid #463acb' }}
+                      width="w-72"
+                      content={
+                        <div className="flex flex-col gap-2">
+                          {ep.redistribution && (
+                            <span className="self-start text-[12px] font-semibold uppercase rounded-[3px] px-1 leading-tight" style={{ background: '#374694', color: '#FFFFFF' }}>Redistribution</span>
+                          )}
+                          <div>
+                            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Pré-roll</p>
+                            <p className="text-[14px] text-gray-800 whitespace-nowrap">{ep.preRollSon ?? '—'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Post-roll</p>
+                            <p className="text-[14px] text-gray-800 whitespace-nowrap">{ep.postRollSon ?? '—'}</p>
+                          </div>
+                        </div>
+                      }
                     >
-                      <span className="font-bold text-gray-900">{ep.heure}</span>
-                      <span className="truncate text-gray-700">{ep.titre}</span>
-                      <div className="grid grid-cols-2 gap-1 mt-0.5">
-                        <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded leading-none flex items-center justify-center gap-0.5 ${ep.preRoll ? 'bg-white/80 text-[#463acb]' : 'bg-white/30 text-[#463acb]/30'}`}>
-                          {ep.preRoll ? 'Pré-roll' : '—'}
-                        </span>
-                        <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded leading-none flex items-center justify-center gap-0.5 ${ep.postRoll ? 'bg-white/80 text-[#463acb]' : 'bg-white/30 text-[#463acb]/30'}`}>
-                          {ep.postRoll ? 'Post-roll' : '—'}
-                        </span>
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => navigate('HabillageDetail', { titre: ep.titre, type: 'diffusion' })}
+                        className="w-full text-left rounded text-[14px] px-1.5 py-1 flex flex-col gap-0.5 cursor-pointer hover:brightness-95 transition-all"
+                        style={{ backgroundColor: '#DBEAFF', borderLeft: '3px solid #463acb' }}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-gray-900">{ep.heure}</span>
+                          {ep.redistribution && (
+                            <span className="text-[12px] font-semibold rounded-[3px] px-1 leading-tight shrink-0" style={{ background: '#374694', color: '#FFFFFF' }}>R</span>
+                          )}
+                        </div>
+                        <span className="truncate text-gray-700">{ep.titre}</span>
+                        <div className="grid grid-cols-2 gap-1 mt-0.5">
+                          <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded leading-none flex items-center justify-center gap-0.5 ${ep.preRoll ? 'bg-white/80 text-[#463acb]' : 'bg-white/30 text-[#463acb]/30'}`}>
+                            {ep.preRoll ? 'Pré-roll' : '—'}
+                          </span>
+                          <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded leading-none flex items-center justify-center gap-0.5 ${ep.postRoll ? 'bg-white/80 text-[#463acb]' : 'bg-white/30 text-[#463acb]/30'}`}>
+                            {ep.postRoll ? 'Post-roll' : '—'}
+                          </span>
+                        </div>
+                      </button>
+                    </HoverCard>
                   ))}
                 </div>
               )

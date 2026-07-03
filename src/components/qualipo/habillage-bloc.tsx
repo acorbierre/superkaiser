@@ -46,15 +46,12 @@ function HabillageSection({ titre, isEpisode = false, episodeTitre }: {
         </>
       ) : (
         <div className="flex flex-col">
-          {items.map((item, index) => (
-            <div key={item.id} className={`flex gap-10 items-start pb-4${index > 0 && items.length > 1 ? ' border-t border-gray-200 pt-6' : ' pt-3'}`}>
+          {items.map((item, index, arr) => (
+            <div key={item.id} className={`flex gap-10 items-start pb-4${index > 0 && arr.length > 1 ? ' border-t border-gray-200 pt-6' : ' pt-3'}`}>
 
               {/* Groupe : grip + numéro + son */}
               <div className="flex-1 flex gap-2 items-start">
                 <GripVertical className="size-4 text-gray-400 shrink-0 mt-1.5 cursor-grab" />
-                <span className="w-6 h-6 rounded-full bg-gray-100 text-xs font-semibold text-gray-500 flex items-center justify-center shrink-0 mt-1">
-                  {index + 1}
-                </span>
                 <div className="flex-1 flex flex-col gap-2">
                   <SelectField>
                     {SONS_MOCK.map(s => <option key={s}>{s}</option>)}
