@@ -130,6 +130,7 @@ export default function CalendrierPage() {
                           {ep.redistribution && (
                             <span className="self-start text-[12px] font-semibold uppercase rounded-[3px] px-1 leading-tight" style={{ background: '#374694', color: '#FFFFFF' }}>Redistribution</span>
                           )}
+                          <p className="text-[14px] font-semibold text-gray-800">{ep.titre}</p>
                           <div>
                             <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Pré-roll</p>
                             <p className="text-[14px] text-gray-800 whitespace-nowrap">{ep.preRollSon ?? '—'}</p>
