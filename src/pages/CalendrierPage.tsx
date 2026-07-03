@@ -124,7 +124,6 @@ export default function CalendrierPage() {
                   {dayEpisodes.map(ep => (
                     <HoverCard
                       key={ep.id}
-                      width="w-72"
                       content={
                         <div className="flex flex-col gap-3">
                           <div className="flex flex-col gap-1">
