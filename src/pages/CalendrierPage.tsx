@@ -127,10 +127,10 @@ export default function CalendrierPage() {
                       content={
                         <div className="flex flex-col gap-3">
                           <div className="flex flex-col gap-1">
-                            <p className="text-[14px] font-semibold text-gray-800">{ep.titre}</p>
                             {ep.redistribution && (
                               <span className="self-start text-[12px] font-semibold uppercase rounded-[3px] px-1 leading-tight" style={{ background: '#374694', color: '#FFFFFF' }}>Redistribution</span>
                             )}
+                            <p className="text-[16px] font-semibold text-gray-800">{ep.titre}</p>
                           </div>
                           <div className="flex flex-col gap-0.5">
                             <p className="text-[14px] text-gray-800 whitespace-nowrap"><span className="font-semibold">Pré-roll :</span> {ep.preRollSon ?? '—'}</p>
