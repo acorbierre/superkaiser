@@ -126,18 +126,16 @@ export default function CalendrierPage() {
                       key={ep.id}
                       width="w-72"
                       content={
-                        <div className="flex flex-col gap-2">
-                          {ep.redistribution && (
-                            <span className="self-start text-[12px] font-semibold uppercase rounded-[3px] px-1 leading-tight" style={{ background: '#374694', color: '#FFFFFF' }}>Redistribution</span>
-                          )}
-                          <p className="text-[14px] font-semibold text-gray-800">{ep.titre}</p>
-                          <div>
-                            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Pré-roll</p>
-                            <p className="text-[14px] text-gray-800 whitespace-nowrap">{ep.preRollSon ?? '—'}</p>
+                        <div className="flex flex-col gap-3">
+                          <div className="flex flex-col gap-1">
+                            <p className="text-[14px] font-semibold text-gray-800">{ep.titre}</p>
+                            {ep.redistribution && (
+                              <span className="self-start text-[12px] font-semibold uppercase rounded-[3px] px-1 leading-tight" style={{ background: '#374694', color: '#FFFFFF' }}>Redistribution</span>
+                            )}
                           </div>
-                          <div>
-                            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Post-roll</p>
-                            <p className="text-[14px] text-gray-800 whitespace-nowrap">{ep.postRollSon ?? '—'}</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-[14px] text-gray-800 whitespace-nowrap"><span className="font-semibold">Pré-roll :</span> {ep.preRollSon ?? '—'}</p>
+                            <p className="text-[14px] text-gray-800 whitespace-nowrap"><span className="font-semibold">Post-roll :</span> {ep.postRollSon ?? '—'}</p>
                           </div>
                         </div>
                       }
