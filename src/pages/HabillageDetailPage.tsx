@@ -8,6 +8,7 @@ const EMISSIONS_IMAGES: Record<string, string> = {
 }
 import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
+import { SectionTitle } from '@/components/ui/section-title'
 import { HabillageBloc } from '@/components/qualipo/habillage-bloc'
 import { HabillageRegles } from '@/components/qualipo/habillage-regles'
 import AudioPlayer from '@/components/qualipo/audio-player'
@@ -143,20 +144,20 @@ export default function HabillageDetailPage() {
         <div className="grid grid-cols-[1fr_320px] gap-4 mt-4">
 
           {/* Colonne principale — habillage */}
-          <div className="flex flex-col gap-4">
+          <div>
             {type === 'emission' ? (
               <HabillageRegles emissionTitre={titre ?? ''} />
             ) : (
               <>
-                <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">Règles en cours</h2>
+                <SectionTitle className="mt-4">Règles en cours</SectionTitle>
                 <HabillageBloc emissionTitre={son?.emission ?? emission ?? ''} ruleLabel="01/07 → 31/07" />
               </>
             )}
           </div>
 
           {/* Sidebar */}
-          <div className="self-start flex flex-col gap-4">
-            <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">{type === 'emission' ? 'Informations du podcast' : 'Informations de l\'épisode'}</h2>
+          <div className="self-start">
+            <SectionTitle className="mt-4">{type === 'emission' ? 'Informations du podcast' : 'Informations de l\'épisode'}</SectionTitle>
             <div className={CARD}>
             {type === 'emission' ? (
               <>

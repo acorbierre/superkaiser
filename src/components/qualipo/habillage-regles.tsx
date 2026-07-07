@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trash2, Plus, List, GripVertical, Pencil, Check, X } from 'lucide-react'
 import { ItemTitle } from '@/components/ui/item-title'
+import { SectionTitle } from '@/components/ui/section-title'
 import { SelectField } from '@/components/ui/select-field'
 import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
@@ -285,8 +286,9 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">Règles d'habillage en cours</h2>
+    <>
+      <SectionTitle className="mt-4">Règles d'habillage en cours</SectionTitle>
+      <div className="flex flex-col gap-3">
 
       {/* Card placeholder / nouvelle règle */}
       {!showNew ? (
@@ -424,6 +426,7 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

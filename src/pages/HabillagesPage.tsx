@@ -5,6 +5,7 @@ import { Autocomplete } from '@/components/ui/autocomplete'
 import type { AutocompleteOption } from '@/components/ui/autocomplete'
 import { CARD, LABEL } from '@/lib/styles'
 import { ItemTitle } from '@/components/ui/item-title'
+import { SectionTitle } from '@/components/ui/section-title'
 import { sons } from '@/data/sons'
 import { useNavigation } from '@/contexts/navigation-context'
 import { STATION } from '@/data/constants'
@@ -72,7 +73,7 @@ export default function HabillagesPage() {
           </div>
         </div>
 
-        <h2 className="mt-8 mb-4 text-xl font-semibold text-gray-900">Accès rapides</h2>
+        <SectionTitle className="mt-8">Accès rapides</SectionTitle>
 
         {/* Card favoris */}
         <div className={`${CARD} flex flex-col gap-6`}>
