@@ -6,14 +6,21 @@ interface SelectFieldProps {
   disabled?: boolean
   children: React.ReactNode
   className?: string
+  value?: string
+  onChange?: (value: string) => void
 }
 
-export function SelectField({ label, disabled, children, className }: SelectFieldProps) {
+export function SelectField({ label, disabled, children, className, value, onChange }: SelectFieldProps) {
   return (
     <div className={cn('flex flex-col gap-1', className)}>
       {label && <label className={cn(LABEL, disabled && 'opacity-50')}>{label}</label>}
       <div className="relative">
-        <select className={SELECT} disabled={disabled}>
+        <select
+          className={SELECT}
+          disabled={disabled}
+          value={value}
+          onChange={onChange ? e => onChange(e.target.value) : undefined}
+        >
           {children}
         </select>
         <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">

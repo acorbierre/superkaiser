@@ -1,11 +1,18 @@
 import { useState, useMemo } from 'react'
-import { ArrowLeft, Copy, Check } from 'lucide-react'
+import { ArrowLeft, Copy, Check, Heart, Calendar, List } from 'lucide-react'
+
+const EMISSIONS_IMAGES: Record<string, string> = {
+  'À voix nue':              '/emissions/sc_a_voix_nue_1400.jpg',
+  'Affaires étrangères':     '/emissions/sc_affaires-etrangeres.png',
+  'Le cours de l\'histoire': '/emissions/sc_sc_le-cours-de-l-histoire.png',
+}
 import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { HabillageBloc } from '@/components/qualipo/habillage-bloc'
+import { HabillageRegles } from '@/components/qualipo/habillage-regles'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { InfoMessage } from '@/components/ui/info-message'
-import { BTN_PRIMARY, CARD, LINK } from '@/lib/styles'
+
+import { CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
 import { STATION } from '@/data/constants'
@@ -17,8 +24,10 @@ function extractBR(programme: string): string {
 
 export default function HabillageDetailPage() {
   const { params, navigate } = useNavigation()
-  const { titre, type } = params
+  const { titre, type, emission } = params
   const [copied, setCopied] = useState(false)
+  const [favori, setFavori] = useState(true)
+  const emissionImage = titre ? EMISSIONS_IMAGES[titre] ?? null : null
 
   const son = useMemo(() => {
     if (!titre) return null
@@ -38,25 +47,40 @@ export default function HabillageDetailPage() {
       <div className="max-w-[1088px] mx-auto px-6 py-8">
 
         <button
-          onClick={() => window.history.back()}
+          onClick={() => navigate('Habillages')}
           className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 cursor-pointer transition-colors mb-6"
         >
           <ArrowLeft className="size-4" />
-          Retour
+          Retour à l'accueil
         </button>
 
         {/* Card principale */}
-        <div className={`${CARD} mt-6`}>
+        <div className={`${CARD} mt-6 relative`}>
+
+          {/* Bouton favori */}
+          <button
+            onClick={() => setFavori(f => !f)}
+            className="absolute top-8 right-10 cursor-pointer transition-colors"
+          >
+            <Heart
+              className={`size-5 transition-colors ${favori ? 'fill-gray-400 text-gray-400' : 'text-gray-300 hover:text-gray-400'}`}
+            />
+          </button>
+
           <div className="flex gap-8">
 
-            {/* Placeholder photo */}
-            <div className="w-56 shrink-0 aspect-[4/3] bg-gray-100 rounded-lg flex items-center justify-center">
-              <svg className="size-10 text-gray-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-            </div>
+            {/* Photo émission ou placeholder */}
+            {emissionImage ? (
+              <img src={emissionImage} alt={titre ?? ''} className="w-44 shrink-0 aspect-square rounded-lg object-cover" />
+            ) : (
+              <div className="w-44 shrink-0 aspect-[4/3] bg-gray-100 rounded-lg flex items-center justify-center">
+                <svg className="size-10 text-gray-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+            )}
 
             {/* Informations */}
             <div className="flex flex-col gap-3 flex-1 justify-center">
@@ -120,22 +144,25 @@ export default function HabillageDetailPage() {
 
           {/* Colonne principale — habillage */}
           <div className="flex flex-col gap-4">
-            {type === 'emission' && (
-              <InfoMessage>
-                Par défaut, tous les épisodes de ce podcast hériteront de ces habillages. Ils peuvent toutefois être personnalisés au niveau de chaque épisode.
-              </InfoMessage>
+            {type === 'emission' ? (
+              <HabillageRegles emissionTitre={titre ?? ''} />
+            ) : (
+              <>
+                <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">Règles en cours</h2>
+                <HabillageBloc emissionTitre={son?.emission ?? emission ?? ''} ruleLabel="01/07 → 31/07" />
+              </>
             )}
-            <HabillageBloc />
-            <button className={`${BTN_PRIMARY} self-start`}>Enregistrer</button>
           </div>
 
           {/* Sidebar */}
-          <div className={`${CARD} self-start`}>
+          <div className="self-start flex flex-col gap-3">
+            <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">{type === 'emission' ? 'Informations du podcast' : 'Informations de l\'épisode'}</h2>
+            <div className={CARD}>
             {type === 'emission' ? (
               <>
-                <ItemTitle>Épisodes du podcast</ItemTitle>
-                <a className={`${LINK} mt-3`}>Voir la liste des diffusions</a>
-                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}>Voir le calendrier des épisodes</button>
+                <ItemTitle>Tous les épisodes</ItemTitle>
+                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-3`}><Calendar className="size-4" />Voir le calendrier</button>
+                <button onClick={() => navigate('ListeEpisodes', { titre: titre ?? '' })} className={`${LINK} mt-2`}><List className="size-4" />Voir la liste</button>
               </>
             ) : (
               <>
@@ -158,9 +185,10 @@ export default function HabillageDetailPage() {
                     >{son.detail.podcastPrincipalLabel}</button>
                   : <p className="mt-3 text-sm text-gray-400">—</p>
                 }
-                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}>Voir le calendrier des épisodes</button>
+                <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}><Calendar className="size-4" />Calendrier des épisodes</button>
               </>
             )}
+            </div>
           </div>
 
         </div>

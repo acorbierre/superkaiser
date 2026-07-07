@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, CalendarDays, List } from 'lucide-react'
 import { PageTitle } from '@/components/ui/page-title'
 import { HoverCard } from '@/components/ui/hover-card'
 import { useNavigation } from '@/contexts/navigation-context'
@@ -65,36 +65,51 @@ export default function CalendrierPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="px-6 py-8">
+      <div className="max-w-[1088px] mx-auto px-6 py-8">
+
+        {/* Header hors card — identique à ListeEpisodesPage */}
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <button
+              onClick={() => navigate('HabillageDetail', { titre: titre ?? '', type: 'emission' })}
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
+            >
+              <ArrowLeft className="size-4" />
+              Retour à l'émission
+            </button>
+            <div className="mt-2">
+              <PageTitle>{titre ?? '—'}</PageTitle>
+            </div>
+          </div>
+          <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm">
+            <button className="flex items-center gap-1.5 px-3 h-8 font-semibold text-blue-rf bg-blue-rf/10 cursor-default">
+              <CalendarDays className="size-4" />
+              Calendrier
+            </button>
+            <button
+              onClick={() => navigate('ListeEpisodes', { titre: titre ?? '' })}
+              className="flex items-center gap-1.5 px-3 h-8 text-gray-500 hover:bg-gray-50 cursor-pointer transition-colors border-l border-gray-200"
+            >
+              <List className="size-4" />
+              Liste
+            </button>
+          </div>
+        </div>
 
         {/* Calendrier */}
         <div className="bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.07)]">
 
-          {/* Header : retour + titre centré + nav mois */}
-          <div className="px-6 py-5 flex items-center border-b border-gray-100">
-            <div className="w-56 shrink-0">
-              <button
-                onClick={() => window.history.back()}
-                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
-              >
-                <ArrowLeft className="size-4" />
-                Retour
-              </button>
-            </div>
-            <div className="flex-1 text-center">
-              <PageTitle>{titre ?? '—'}</PageTitle>
-            </div>
-            <div className="w-56 shrink-0 flex items-center justify-end gap-2">
-              <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 cursor-pointer transition-colors text-gray-500">
-                <ChevronLeft className="size-4" />
-              </button>
-              <span className="text-[15px] font-semibold text-gray-800 w-40 text-center">
-                {MOIS[currentDate.getMonth()]} {currentDate.getFullYear()}
-              </span>
-              <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 cursor-pointer transition-colors text-gray-500">
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
+          {/* Nav mois */}
+          <div className="px-6 py-4 flex items-center justify-center gap-3 border-b border-gray-100">
+            <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 cursor-pointer transition-colors text-gray-500">
+              <ChevronLeft className="size-4" />
+            </button>
+            <span className="text-[15px] font-semibold text-gray-800 w-40 text-center">
+              {MOIS[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </span>
+            <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 cursor-pointer transition-colors text-gray-500">
+              <ChevronRight className="size-4" />
+            </button>
           </div>
 
           {/* En-têtes jours */}
@@ -140,7 +155,7 @@ export default function CalendrierPage() {
                       }
                     >
                       <button
-                        onClick={() => navigate('HabillageDetail', { titre: ep.titre, type: 'diffusion' })}
+                        onClick={() => navigate('HabillageDetail', { titre: ep.titre, type: 'diffusion', emission: titre ?? '' })}
                         className="w-full text-left rounded text-[14px] px-1.5 py-1 flex flex-col gap-0.5 cursor-pointer hover:brightness-95 transition-all"
                         style={{ backgroundColor: '#DBEAFF', borderLeft: '3px solid #463acb' }}
                       >
