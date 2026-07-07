@@ -36,6 +36,16 @@ export default function HabillageDetailPage() {
     return sons.find(s => s.emission === titre) ?? null
   }, [titre, type])
 
+  const fallback = {
+    diffuseAt: '15 juin 2026 à 09h00',
+    liberationAt: '22 juin 2026 à 09h00',
+    podcastPrincipalLabel: emission ?? titre ?? 'Émission',
+    numeroMagnetotheque: '2026-0615-FC',
+  }
+  const displayDiffuseAt = son?.detail.diffuseAt ?? fallback.diffuseAt
+  const displayMID = son?.numeroMagnetotheque ?? fallback.numeroMagnetotheque
+  const displayPodcastLabel = son?.detail.podcastPrincipalLabel ?? fallback.podcastPrincipalLabel
+
   function copyMID() {
     if (!son?.numeroMagnetotheque) return
     navigator.clipboard.writeText(son.numeroMagnetotheque)
@@ -110,9 +120,9 @@ export default function HabillageDetailPage() {
 
               {/* Métadonnées */}
               <div className="flex flex-col gap-1 text-sm text-gray-500">
-                {type === 'diffusion' && son?.numeroMagnetotheque && (
+                {type === 'diffusion' && (
                   <div className="flex items-center gap-1.5">
-                    <span>Numéro Magnétothèque (MID) : {son.numeroMagnetotheque}</span>
+                    <span>Numéro Magnétothèque (MID) : {displayMID}</span>
                     <button
                       onClick={copyMID}
                       title="Copier le MID"
@@ -168,24 +178,15 @@ export default function HabillageDetailPage() {
             ) : (
               <>
                 <ItemTitle>Date de diffusion</ItemTitle>
-                {son?.detail.diffuseAt
-                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
-                  : <p className="mt-3 text-sm text-gray-400">—</p>
-                }
+                <p className="mt-3 text-sm text-gray-600">{displayDiffuseAt}</p>
                 <div className="mt-6"><ItemTitle>Date de libération du son</ItemTitle></div>
-                {son?.detail.diffuseAt
-                  ? <p className="mt-3 text-sm text-gray-600">{son.detail.diffuseAt}</p>
-                  : <p className="mt-3 text-sm text-gray-400">—</p>
-                }
+                <p className="mt-3 text-sm text-gray-600">{fallback.liberationAt}</p>
                 <hr className="border-gray-100 mt-6 mb-6" />
                 <ItemTitle>Podcast</ItemTitle>
-                {son?.detail.podcastPrincipalLabel
-                  ? <button
-                      onClick={() => navigate('HabillageDetail', { titre: son.emission, type: 'emission' })}
-                      className={`${LINK} mt-3`}
-                    >{son.detail.podcastPrincipalLabel}</button>
-                  : <p className="mt-3 text-sm text-gray-400">—</p>
-                }
+                <button
+                  onClick={() => navigate('HabillageDetail', { titre: son?.emission ?? (emission ?? titre ?? ''), type: 'emission' })}
+                  className={`${LINK} mt-3`}
+                >{displayPodcastLabel}</button>
                 <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-2`}><Calendar className="size-4" />Calendrier des épisodes</button>
               </>
             )}

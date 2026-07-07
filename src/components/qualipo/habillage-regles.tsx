@@ -109,7 +109,7 @@ function RollList({ items, onAdd, onRemove, onUpdate, readOnly = false }: {
             <div className="flex-1 flex flex-col gap-2">
               <div className="flex items-center justify-between gap-4">
                 <p className="text-[15px] text-gray-900">
-                  {item.type === 'preroll' ? 'Pré-roll' : 'Post-roll'} · {item.son}
+                  <span className="font-semibold">{item.type === 'preroll' ? 'Pré-roll' : 'Post-roll'}</span> · {item.son}
                 </p>
                 <div className="flex items-center gap-3 shrink-0">
                   {(['interne', 'externe'] as const).map(canal => {
@@ -296,7 +296,7 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
           onClick={() => setShowNew(true)}
           className="w-full rounded-xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] py-5 px-8 cursor-pointer group transition-shadow hover:shadow-[0_4px_32px_rgba(0,0,0,0.12)]"
         >
-          <div className="flex items-center gap-1.5 text-blue-rf">
+          <div className="flex items-center justify-center gap-1.5 text-blue-rf">
             <Plus className="size-3.5" />
             <span className="text-[15px] group-hover:underline transition-colors">Ajouter une règle</span>
           </div>
