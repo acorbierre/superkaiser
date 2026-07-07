@@ -155,7 +155,7 @@ export default function HabillageDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="self-start flex flex-col gap-3">
+          <div className="self-start flex flex-col gap-4">
             <h2 className="mt-4 mb-2 text-xl font-semibold text-gray-900">{type === 'emission' ? 'Informations du podcast' : 'Informations de l\'épisode'}</h2>
             <div className={CARD}>
             {type === 'emission' ? (

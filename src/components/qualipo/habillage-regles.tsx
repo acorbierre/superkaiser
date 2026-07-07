@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, Plus, Copy, List, GripVertical, Pencil, Check, X } from 'lucide-react'
+import { Trash2, Plus, List, GripVertical, Pencil, Check, X } from 'lucide-react'
 import { ItemTitle } from '@/components/ui/item-title'
 import { SelectField } from '@/components/ui/select-field'
 import { Switch } from '@/components/ui/switch'
@@ -248,20 +248,6 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
     setEditingId(null)
   }
 
-  function duplicateRegle(id: number) {
-    const regle = regles.find(r => r.id === id)
-    if (!regle) return
-    const newId = Date.now()
-    const newRegle: Regle = {
-      ...regle,
-      id: newId,
-      items: regle.items.map((item, i) => ({ ...item, id: Date.now() + i })),
-      dateDebut: '', dateFin: '', appliedDateDebut: '', appliedDateFin: '', nbEpisodes: 0,
-    }
-    setRegles(prev => [newRegle, ...prev])
-    setSnapshots(prev => ({ ...prev, [newId]: { ...newRegle } }))
-    setEditingId(newId)
-  }
 
   function updateDate(id: number, field: 'dateDebut' | 'dateFin', value: string) {
     setRegles(prev => prev.map(r => r.id === id ? { ...r, [field]: value } : r))
@@ -306,11 +292,11 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
       {!showNew ? (
         <button
           onClick={() => setShowNew(true)}
-          className="w-full rounded-xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] py-5 px-10 cursor-pointer group transition-shadow hover:shadow-[0_4px_32px_rgba(0,0,0,0.12)]"
+          className="w-full rounded-xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] py-5 px-8 cursor-pointer group transition-shadow hover:shadow-[0_4px_32px_rgba(0,0,0,0.12)]"
         >
-          <div className="flex items-center justify-center gap-2 text-gray-400 group-hover:text-blue-rf transition-colors">
-            <Plus className="size-5" />
-            <span className="text-[15px] font-medium">Ajouter une règle</span>
+          <div className="flex items-center gap-1.5 text-blue-rf">
+            <Plus className="size-3.5" />
+            <span className="text-[15px] group-hover:underline transition-colors">Ajouter une règle</span>
           </div>
         </button>
       ) : (
@@ -329,11 +315,10 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
               onRemove={id => setNewItems(prev => prev.filter(i => i.id !== id))}
               onUpdate={(id, field, value) => setNewItems(prev => prev.map(i => i.id !== id ? i : { ...i, [field]: value }))}
             />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button onClick={confirmNew} disabled={!newDateDebut || !newDateFin} className={`${BTN_PRIMARY} disabled:opacity-40 disabled:cursor-not-allowed`}>
                 Valider
               </button>
-              <div className="flex-1" />
               <button onClick={cancelNew} className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">Annuler</button>
             </div>
           </div>
@@ -401,9 +386,6 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
                   </button>
                 )}
                 <div className="flex-1" />
-                <button onClick={() => duplicateRegle(regle.id)} title="Dupliquer" className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 cursor-pointer transition-colors text-gray-400 hover:text-gray-600">
-                  <Copy className="size-3.5" />
-                </button>
                 <button onClick={() => setConfirmDeleteId(regle.id)} title="Supprimer" className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-50 cursor-pointer transition-colors text-gray-400 hover:text-red-400">
                   <Trash2 className="size-3.5" />
                 </button>
