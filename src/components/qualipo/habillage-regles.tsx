@@ -290,16 +290,14 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
       <SectionTitle className="mt-4">Règles d'habillage en cours</SectionTitle>
       <div className="flex flex-col gap-3">
 
-      {/* Card placeholder / nouvelle règle */}
+      {/* Bloc nouvelle règle */}
       {!showNew ? (
         <button
           onClick={() => setShowNew(true)}
-          className="w-full rounded-xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] py-5 px-8 cursor-pointer group transition-shadow hover:shadow-[0_4px_32px_rgba(0,0,0,0.12)]"
+          className="flex items-center gap-1.5 text-gray-400 hover:text-blue-rf px-8 py-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-rf/40 transition-colors cursor-pointer w-full"
         >
-          <div className="flex items-center justify-center gap-1.5 text-blue-rf">
-            <Plus className="size-3.5" />
-            <span className="text-[15px] group-hover:underline transition-colors">Ajouter une règle</span>
-          </div>
+          <Plus className="size-3.5 shrink-0" />
+          <span className="text-[15px]">Ajouter une règle</span>
         </button>
       ) : (
         <div className={`${CARD} ring-2 ring-blue-rf/25`}>
