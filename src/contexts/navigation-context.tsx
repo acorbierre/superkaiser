@@ -20,39 +20,27 @@ function hashToPage(hash: string) {
   return hash.replace('#', '') || 'Qualipo'
 }
 
-type NavState = { page: string; params: NavParams }
+function readNav(): { page: string; params: NavParams } {
+  const state = window.history.state
+  if (state?.page) return { page: state.page, params: state.params ?? {} }
+  return { page: hashToPage(window.location.hash), params: {} }
+}
 
 export function NavigationProvider({ children }: { children: React.ReactNode }) {
-  const [nav, setNav] = useState<NavState>(() => {
-    if (window.history.state?.page) {
-      return { page: window.history.state.page, params: window.history.state.params ?? {} }
-    }
-    return { page: hashToPage(window.location.hash), params: {} }
-  })
+  // Page and params are derived from window.history.state on every render.
+  // We only use a counter to trigger re-renders — no risk of stale state.
+  const [, forceUpdate] = useState(0)
 
-  // Keep a ref to the setter so navigate (created once) always has a fresh reference
-  const setNavRef = useRef(setNav)
-  useEffect(() => { setNavRef.current = setNav })
+  const { page, params } = readNav()
 
   useEffect(() => {
+    const initial = readNav()
     if (!window.history.state?.page) {
-      window.history.replaceState({ page: nav.page, params: {} }, '', pageToHash(nav.page) || window.location.pathname)
+      window.history.replaceState({ page: initial.page, params: {} }, '', pageToHash(initial.page) || window.location.pathname)
     }
 
-    function onPopState(e: PopStateEvent) {
-      if (e.state?.page) {
-        setNavRef.current({ page: e.state.page, params: e.state.params ?? {} })
-      }
-    }
-
-    function onHashChange() {
-      const state = window.history.state
-      if (state?.page) {
-        setNavRef.current({ page: state.page, params: state.params ?? {} })
-      } else {
-        setNavRef.current({ page: hashToPage(window.location.hash), params: {} })
-      }
-    }
+    function onPopState() { forceUpdate(n => n + 1) }
+    function onHashChange() { forceUpdate(n => n + 1) }
 
     window.addEventListener('popstate', onPopState)
     window.addEventListener('hashchange', onHashChange)
@@ -62,19 +50,18 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
     }
   }, [])
 
-  // Created once — uses setNavRef.current so it's never stale
   const navigate = useRef((newPage: string, newParams: NavParams = {}) => {
     const url = pageToHash(newPage) || window.location.pathname
     window.history.pushState({ page: newPage, params: newParams }, '', url)
-    setNavRef.current({ page: newPage, params: newParams })
+    forceUpdate(n => n + 1)
   }).current
 
   return (
     <NavigationContext.Provider value={{
-      page: nav.page,
-      params: nav.params,
+      page,
+      params,
       navigate,
-      isContenus: CONTENUS_PAGE_SET.has(nav.page),
+      isContenus: CONTENUS_PAGE_SET.has(page),
     }}>
       {children}
     </NavigationContext.Provider>
