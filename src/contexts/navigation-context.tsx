@@ -46,9 +46,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
   const navigate = useCallback((newPage: string, newParams: NavParams = {}) => {
     setPage(newPage)
     setParams(newParams)
-    // Pages avec params (ex: HabillageDetail) : pas de hash pour éviter la perte des params
-    const hasParams = Object.keys(newParams).length > 0
-    const url = hasParams ? window.location.pathname : (pageToHash(newPage) || window.location.pathname)
+    const url = pageToHash(newPage) || window.location.pathname
     window.history.pushState({ page: newPage, params: newParams }, '', url)
   }, [])
 
