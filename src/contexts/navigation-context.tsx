@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { CONTENUS_PAGE_SET } from '@/data/navigation'
 
 type NavParams = Record<string, string>
@@ -20,42 +20,61 @@ function hashToPage(hash: string) {
   return hash.replace('#', '') || 'Qualipo'
 }
 
+type NavState = { page: string; params: NavParams }
+
 export function NavigationProvider({ children }: { children: React.ReactNode }) {
-  const [page, setPage] = useState<string>(() => {
-    if (window.history.state?.page) return window.history.state.page
-    return hashToPage(window.location.hash)
+  const [nav, setNav] = useState<NavState>(() => {
+    if (window.history.state?.page) {
+      return { page: window.history.state.page, params: window.history.state.params ?? {} }
+    }
+    return { page: hashToPage(window.location.hash), params: {} }
   })
-  const [params, setParams] = useState<NavParams>(() => window.history.state?.params ?? {})
+
+  // Keep a ref to the setter so navigate (created once) always has a fresh reference
+  const setNavRef = useRef(setNav)
+  useEffect(() => { setNavRef.current = setNav })
 
   useEffect(() => {
     if (!window.history.state?.page) {
-      window.history.replaceState({ page, params: {} }, '', pageToHash(page) || window.location.pathname)
+      window.history.replaceState({ page: nav.page, params: {} }, '', pageToHash(nav.page) || window.location.pathname)
     }
 
     function onPopState(e: PopStateEvent) {
       if (e.state?.page) {
-        setPage(e.state.page)
-        setParams(e.state.params ?? {})
+        setNavRef.current({ page: e.state.page, params: e.state.params ?? {} })
+      }
+    }
+
+    function onHashChange() {
+      const state = window.history.state
+      if (state?.page) {
+        setNavRef.current({ page: state.page, params: state.params ?? {} })
+      } else {
+        setNavRef.current({ page: hashToPage(window.location.hash), params: {} })
       }
     }
 
     window.addEventListener('popstate', onPopState)
-    return () => window.removeEventListener('popstate', onPopState)
+    window.addEventListener('hashchange', onHashChange)
+    return () => {
+      window.removeEventListener('popstate', onPopState)
+      window.removeEventListener('hashchange', onHashChange)
+    }
   }, [])
 
-  const navigate = useCallback((newPage: string, newParams: NavParams = {}) => {
-    setPage(newPage)
-    setParams(newParams)
+  // Created once — uses setNavRef.current so it's never stale
+  const navigate = useRef((newPage: string, newParams: NavParams = {}) => {
     const url = pageToHash(newPage) || window.location.pathname
     window.history.pushState({ page: newPage, params: newParams }, '', url)
-  }, [])
+    setNavRef.current({ page: newPage, params: newParams })
+  }).current
 
   return (
     <NavigationContext.Provider value={{
-      page,
-      params,
+      page: nav.page,
+      params: nav.params,
       navigate,
-      isContenus: CONTENUS_PAGE_SET.has(page),
+      isContenus: CONTENUS_PAGE_SET.has(nav.page),
     }}>
       {children}
     </NavigationContext.Provider>
