@@ -9,7 +9,6 @@ import ComponentsPage from '@/pages/ComponentsPage'
 
 export default function Router() {
   const { page } = useNavigation()
-  console.log('[Router] page=', page, '| history.state=', window.history.state)
 
   switch (page) {
     case 'Diffusions':      return <DiffusionsPage />
