@@ -132,10 +132,10 @@ export default function SidePanel({ son, onClose }: Props) {
                       </div>
 
                       {(isDone || isError) && (
-                        isError ? (
+                        isError && son.statut !== 'droits_fermes' ? (
                           /* ── Vue doublon non résolu ── */
                           <div className="space-y-3">
-                            <div className="rounded-xl border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
+                            <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
                               <p className="text-red-600">
                                 Deux sons ou plus ont été livrés. Choisissez le son à conserver : l'épisode sera republié et les autres sons seront automatiquement désactivés.
                               </p>
@@ -174,7 +174,14 @@ export default function SidePanel({ son, onClose }: Props) {
                           />
                         ) : i === 1 ? (
                           /* ── Étape 2 ── */
-                          <TraitementCard />
+                          <div className="space-y-3">
+                            {son.statut === 'droits_fermes' && (
+                              <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
+                                <p className="text-red-600">Le son ne peut être diffusé car les droits doivent être modifiés dans Itema.</p>
+                              </div>
+                            )}
+                            <TraitementCard hasError={son.statut === 'droits_fermes'} />
+                          </div>
                         ) : (
                           /* ── Étape 3 ── */
                           <DistributionCard emission={son.emission} />

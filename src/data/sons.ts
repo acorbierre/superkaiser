@@ -4,6 +4,7 @@ export type StatutSon =
   | 'attente'
   | 'duree_incoherente'
   | 'non_disponible'
+  | 'droits_fermes'
 
 export interface SonDetail {
   titreComplet: string
@@ -39,6 +40,7 @@ export const STATUT_LABEL: Record<StatutSon, string> = {
   attente:           'En attente',
   duree_incoherente: 'Durée incohérente',
   non_disponible:    'Son non disponible',
+  droits_fermes:     'Son livré mais droits fermés',
 }
 
 export const sons: Son[] = [
@@ -213,7 +215,7 @@ export const sons: Son[] = [
     emission: 'Affaires sensibles',
     titre: 'L\'affaire Seznec',
     numeroMagnetotheque: '2025C3305S0010',
-    statut: 'non_disponible',
+    statut: 'droits_fermes',
     detail: {
       titreComplet: 'Affaires sensibles — L\'affaire Seznec',
       diffuseAt: '19/05/2025 à 15:00',
@@ -229,9 +231,7 @@ export const sons: Son[] = [
     emission: 'La méthode scientifique',
     titre: 'Peut-on prévoir les séismes ?',
     numeroMagnetotheque: '2025C3305S0011',
-    statut: 'duree_incoherente',
-    dureeAttendue: '58min 00s',
-    dureeReelle: '53min 17s',
+    statut: 'non_disponible',
     detail: {
       titreComplet: 'La méthode scientifique — Peut-on prévoir les séismes ?',
       diffuseAt: '19/05/2025 à 16:00',
@@ -248,7 +248,9 @@ export const sons: Son[] = [
     emission: 'Le 18/20',
     titre: 'Le 18/20, émission du XX octobre',
     numeroMagnetotheque: '2025C3305S0012',
-    statut: 'non_disponible',
+    statut: 'duree_incoherente',
+    dureeAttendue: '58min 00s',
+    dureeReelle: '53min 17s',
     detail: {
       titreComplet: 'Le 18/20 du 19 mai',
       diffuseAt: '19/05/2025 à 18:00',

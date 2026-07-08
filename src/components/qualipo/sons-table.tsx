@@ -19,6 +19,7 @@ const BG: Record<StatutSon, string> = {
   attente:           'bg-white',
   duree_incoherente: 'bg-[#FFF2C6]',
   non_disponible:    'bg-[#FFB2B7]',
+  droits_fermes:     'bg-[#FFB2B7]',
 }
 
 const BORDER: Record<StatutSon, string> = {
@@ -27,6 +28,7 @@ const BORDER: Record<StatutSon, string> = {
   attente:           'border-black/5',
   duree_incoherente: 'border-[#e8c79d]',
   non_disponible:    'border-[#ea9797]',
+  droits_fermes:     'border-[#ea9797]',
 }
 
 interface Props {
@@ -44,6 +46,8 @@ function StatutCell({ son }: { son: Son }) {
       return <span className="flex items-center gap-1.5"><Check className="size-4 shrink-0 text-[#25bc95]" />Livré</span>
     case 'non_disponible':
       return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Son non disponible</span>
+    case 'droits_fermes':
+      return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Son livré mais droits fermés</span>
     case 'attente':
       return <span className="flex items-center gap-1.5"><Clock className="size-4 shrink-0 text-gray-500" />{son.minutesRestantes != null ? `Fin dans ${son.minutesRestantes} min` : 'En attente'}</span>
     case 'duree_incoherente':
@@ -60,6 +64,7 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
   if (son.statut === 'attente'           && !f.enAttente)         return false
   if (son.statut === 'duree_incoherente' && !f.dureesIncoherentes) return false
   if (son.statut === 'non_disponible'    && !f.nonDisponibles)    return false
+  if (son.statut === 'droits_fermes'     && !f.nonDisponibles)    return false
   return true
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, Headphones, ChevronDown, ChevronUp } from 'lucide-react'
+import { Check, X, Headphones, ChevronDown, ChevronUp } from 'lucide-react'
 import { CARD } from '@/lib/styles'
 import AudioPlayer from '@/components/qualipo/audio-player'
 
@@ -37,7 +37,7 @@ const MANIFESTATIONS: Manifestation[] = [
   },
 ]
 
-function AccordionItem({ label, count, duree, formats }: Manifestation) {
+function AccordionItem({ label, count, duree, formats, error }: Manifestation & { error?: boolean }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="rounded-xl overflow-hidden">
@@ -45,10 +45,17 @@ function AccordionItem({ label, count, duree, formats }: Manifestation) {
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-3 px-4 py-3 bg-[#eef0ff] hover:bg-[#e6e9ff] transition-colors cursor-pointer"
       >
-        <div className="size-6 rounded-full bg-[#25bc95] flex items-center justify-center shrink-0">
-          <Check className="size-3.5 text-white" strokeWidth={3} />
-        </div>
+        {error ? (
+          <div className="size-6 rounded-full bg-red-500 flex items-center justify-center shrink-0">
+            <X className="size-3.5 text-white" strokeWidth={3} />
+          </div>
+        ) : (
+          <div className="size-6 rounded-full bg-[#25bc95] flex items-center justify-center shrink-0">
+            <Check className="size-3.5 text-white" strokeWidth={3} />
+          </div>
+        )}
         <span className="text-[15px] font-semibold text-[#333] flex-1 text-left">{label} ({count})</span>
+        {error && <span className="text-[13px] text-red-500 mr-1">Droits fermés</span>}
         {open ? <ChevronUp className="size-4 text-gray-400" /> : <ChevronDown className="size-4 text-gray-400" />}
       </button>
       {open && (
@@ -69,15 +76,15 @@ function AccordionItem({ label, count, duree, formats }: Manifestation) {
   )
 }
 
-export function TraitementCard() {
+export function TraitementCard({ hasError = false }: { hasError?: boolean }) {
   return (
-    <div className={CARD}>
+    <div className={`${CARD} !pt-6`}>
       <div className="flex items-center gap-2 mb-4">
         <Headphones className="size-5 text-[#333]" />
         <span className="text-[15px] font-semibold text-[#333]">4 manifestations</span>
       </div>
       <div className="space-y-2">
-        {MANIFESTATIONS.map(m => <AccordionItem key={m.label} {...m} />)}
+        {MANIFESTATIONS.map(m => <AccordionItem key={m.label} {...m} error={hasError} />)}
       </div>
     </div>
   )
