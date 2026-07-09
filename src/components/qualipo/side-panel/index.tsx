@@ -23,7 +23,7 @@ export default function SidePanel({ son, onClose }: Props) {
   ]
 
   function effectiveStepState(statut: StatutSon, index: number): StepState {
-    if (statut === 'non_disponible' && index === 0 && conservedFichier) return 'done'
+    if ((statut === 'non_disponible' || statut === 'mid_non_conforme') && index === 0 && conservedFichier) return 'done'
     return getStepState(statut, index)
   }
 
@@ -132,7 +132,7 @@ export default function SidePanel({ son, onClose }: Props) {
                       </div>
 
                       {(isDone || isError) && (
-                        isError && son.statut !== 'droits_fermes' ? (
+                        isError && son.statut === 'non_disponible' ? (
                           /* ── Vue doublon non résolu ── */
                           <div className="space-y-3">
                             <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
@@ -166,6 +166,11 @@ export default function SidePanel({ son, onClose }: Props) {
                               </div>
                             ))}
                           </div>
+                        ) : i === 0 && son.statut === 'mid_non_conforme' ? (
+                          /* ── Vue MID non conforme ── */
+                          <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
+                            <p className="text-red-600">Le son ne peut être diffusé car le numéro de Magnétothèque (MID) n'est pas valide. Veuillez vérifier et corriger le MID dans Itema.</p>
+                          </div>
                         ) : i === 0 ? (
                           /* ── Vue normale étape 1 ── */
                           <AudioPlayer
@@ -177,7 +182,7 @@ export default function SidePanel({ son, onClose }: Props) {
                           <div className="space-y-3">
                             {son.statut === 'droits_fermes' && (
                               <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
-                                <p className="text-red-600">Le son ne peut être diffusé car les droits doivent être modifiés dans Itema.</p>
+                                <p className="text-red-600">Le son ne peut être diffusé car les droits sont fermés. Pour permettre la diffusion, veuillez modifier les droits dans Itema.</p>
                               </div>
                             )}
                             <TraitementCard hasError={son.statut === 'droits_fermes'} />

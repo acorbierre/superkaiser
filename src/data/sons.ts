@@ -5,6 +5,7 @@ export type StatutSon =
   | 'duree_incoherente'
   | 'non_disponible'
   | 'droits_fermes'
+  | 'mid_non_conforme'
 
 export interface SonDetail {
   titreComplet: string
@@ -39,8 +40,9 @@ export const STATUT_LABEL: Record<StatutSon, string> = {
   livre_avance:      'Livré en avance',
   attente:           'En attente',
   duree_incoherente: 'Durée incohérente',
-  non_disponible:    'Son non disponible',
-  droits_fermes:     'Son livré mais droits fermés',
+  non_disponible:    'Non disponible',
+  droits_fermes:     'Non disponible : droits fermés',
+  mid_non_conforme:  'Non disponible : MID non conforme',
 }
 
 export const sons: Son[] = [
@@ -231,7 +233,7 @@ export const sons: Son[] = [
     emission: 'La méthode scientifique',
     titre: 'Peut-on prévoir les séismes ?',
     numeroMagnetotheque: '2025C3305S0011',
-    statut: 'non_disponible',
+    statut: 'mid_non_conforme',
     detail: {
       titreComplet: 'La méthode scientifique — Peut-on prévoir les séismes ?',
       diffuseAt: '19/05/2025 à 16:00',

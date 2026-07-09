@@ -12,6 +12,7 @@ export const STEPS = [
 export function getStepState(statut: StatutSon, index: number): StepState {
   if (statut === 'attente') return 'pending'
   if (statut === 'non_disponible') return index === 0 ? 'error' : 'pending'
+  if (statut === 'mid_non_conforme') return index === 0 ? 'error' : 'pending'
   if (statut === 'droits_fermes') return index === 0 ? 'done' : index === 1 ? 'error' : 'pending'
   return 'done'
 }

@@ -38,6 +38,10 @@ Tout élément d'interface utilisé à plus d'un endroit doit être extrait en c
 
 Tout composant ou élément interactif (bouton, lien, item de liste, toggle…) doit toujours avoir `cursor-pointer`. Sans exception.
 
+### 7. Vérifier le build avant de pusher
+
+Toujours lancer `npm run build` avant tout `git push`. Le compilateur TypeScript (`tsc -b`) détecte les imports inutilisés et autres erreurs qui ne remontent pas au runtime.
+
 ### 6. Consommation de tokens responsable
 
 - Ne pas re-lire un fichier déjà lu dans la session si son contenu n'a pas changé.
