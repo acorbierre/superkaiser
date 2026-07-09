@@ -53,7 +53,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
         <div className="space-y-4 px-10">
           <div className="flex items-center gap-2 font-medium text-[1.125rem] text-gray-800">
             <Bell className="size-5" />
-            Statuts de sons affichés
+            Sons affichés
           </div>
 
           <div className="space-y-3">
