@@ -47,7 +47,7 @@ function StatutCell({ son }: { son: Son }) {
     case 'livre_avance':
       return <span className="flex items-center gap-1.5"><Check className="size-4 shrink-0 text-[#25bc95]" />Livré</span>
     case 'non_disponible':
-      return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible</span>
+      return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : plusieurs sons livrés</span>
     case 'droits_fermes':
       return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : droits fermés</span>
     case 'mid_non_conforme':
@@ -147,7 +147,7 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
             <th className={TH}>Titre</th>
             <th className={TH}>N° Magnétothèque</th>
             <th className={TH}>Liens</th>
-            <th className={TH}>Statut</th>
+            <th className={TH}>Statut du son</th>
             <th />
           </tr>
         </thead>

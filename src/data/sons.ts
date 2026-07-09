@@ -40,7 +40,7 @@ export const STATUT_LABEL: Record<StatutSon, string> = {
   livre_avance:      'Livré en avance',
   attente:           'En attente',
   duree_incoherente: 'Durée incohérente',
-  non_disponible:    'Non disponible',
+  non_disponible:    'Non disponible : plusieurs sons livrés',
   droits_fermes:     'Non disponible : droits fermés',
   mid_non_conforme:  'Non disponible : MID non conforme',
 }
