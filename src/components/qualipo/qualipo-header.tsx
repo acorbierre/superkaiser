@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, CalendarDays, SlidersHorizontal, Search, RefreshCw, Maximize2, ChevronDown, Minus, Plus } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronLeft, ChevronRight, CalendarDays, SlidersHorizontal, Search, RefreshCw, Maximize, ChevronDown, Minus, Plus, Mail } from 'lucide-react'
 import FiltresPanel, { type FiltresState } from './filtres-panel'
 import { BTN_PRIMARY } from '@/lib/styles'
+import { Switch } from '@/components/ui/switch'
 import { STATION } from '@/data/constants'
 import { DatePickerPopup, formatDate } from './date-picker'
 
@@ -18,21 +19,13 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [filtresOpen, setFiltresOpen] = useState(false)
   const [refreshOpen, setRefreshOpen] = useState(false)
+  const [alertesOpen, setAlertesOpen] = useState(false)
+  const [alerteDoublons, setAlerteDoublons] = useState(false)
   const [intervalMin, setIntervalMin] = useState(3)
   const [pendingMin, setPendingMin] = useState(3)
-  const [countdown, setCountdown] = useState(180)
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(c => c <= 1 ? intervalMin * 60 : c - 1)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [intervalMin])
 
   function validerInterval() {
-    const val = Math.max(1, pendingMin)
-    setIntervalMin(val)
-    setCountdown(val * 60)
+    setIntervalMin(Math.max(1, pendingMin))
     setRefreshOpen(false)
   }
 
@@ -44,9 +37,6 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
     setSelectedDate(d => { const n = new Date(d); n.setDate(n.getDate() + 1); return n })
     onDateChange?.()
   }
-
-  const mins = Math.floor(countdown / 60)
-  const secs = countdown % 60
 
   return (
     <div className="relative">
@@ -61,13 +51,13 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
             {STATION.initiales}
           </div>
           <span className="font-medium text-[1.125rem] text-[#333]">{STATION.label}</span>
-          <ChevronDown className="size-4 text-gray-500" />
+          <ChevronDown className="size-[18px] text-[#333]" />
         </button>
 
         {/* Navigation date + datepicker */}
         <div className="flex items-center gap-1">
           <button onClick={prevDay} className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer">
-            <ChevronLeft className="size-4 text-gray-600" />
+            <ChevronLeft className="size-[18px] text-[#333]" />
           </button>
 
           <div className="relative">
@@ -75,7 +65,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
               onClick={() => { setCalendarOpen(o => !o); setRefreshOpen(false); setFiltresOpen(false) }}
               className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors cursor-pointer ${calendarOpen ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
             >
-              <CalendarDays className="size-4 text-gray-500" />
+              <CalendarDays className="size-[18px] text-[#333]" />
               <span className="font-medium text-[1.125rem] text-[#333]">{formatDate(selectedDate)}</span>
             </button>
 
@@ -93,7 +83,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
           </div>
 
           <button onClick={nextDay} className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer">
-            <ChevronRight className="size-4 text-gray-600" />
+            <ChevronRight className="size-[18px] text-[#333]" />
           </button>
         </div>
 
@@ -104,7 +94,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
             filtresOpen ? 'bg-gray-100 text-[#333]' : 'text-[#333] hover:bg-gray-50'
           }`}
         >
-          <SlidersHorizontal className="size-4" />
+          <SlidersHorizontal className="size-[18px]" />
           Filtres
         </button>
 
@@ -120,14 +110,44 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          {/* Refresh countdown + popover */}
+          {/* Alertes */}
+          <div className="relative">
+            <button
+              onClick={() => { setAlertesOpen(o => !o); setRefreshOpen(false) }}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${alertesOpen ? 'bg-gray-100' : 'hover:bg-gray-100'}`}
+            >
+              <Mail className="size-[18px] text-[#333]" />
+            </button>
+
+            {alertesOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setAlertesOpen(false)} />
+                <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-gray-100 px-6 py-5 space-y-4 whitespace-nowrap">
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Mail className="size-4" />
+                    <span className="text-[13px] font-medium uppercase tracking-wide">Alertes email</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={alerteDoublons}
+                      onCheckedChange={setAlerteDoublons}
+                      className="cursor-pointer data-checked:!bg-[#463acb] shrink-0"
+                    />
+                    <span className="text-[15px] text-[#333] font-medium">M'alerter en cas de doublon</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Refresh + popover */}
           <div className="relative">
             <button
               onClick={() => { setRefreshOpen(o => !o); setPendingMin(intervalMin) }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer text-sm text-gray-600"
+              className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-[#333]"
             >
-              <RefreshCw className="size-3.5" />
-              <span className="tabular-nums font-medium">{mins}m{secs > 0 ? ` ${String(secs).padStart(2, '0')}s` : ''}</span>
+              <RefreshCw className="size-[18px]" />
+              <span className="tabular-nums font-medium text-[15px]">{intervalMin}m</span>
             </button>
 
             {refreshOpen && (
@@ -166,7 +186,7 @@ export default function QualipoHeader({ filtres, onFiltresChange, recherche, onR
           </div>
 
           <button className="p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer">
-            <Maximize2 className="size-4 text-gray-500" />
+            <Maximize className="size-[18px] text-[#333]" />
           </button>
         </div>
       </div>

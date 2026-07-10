@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Tooltip } from '@/components/ui/tooltip'
-import { Bell, Check, Clock, Calendar, Info, TriangleAlert, X } from 'lucide-react'
+import { Bell, Check, Clock, Calendar, Files, Info, TriangleAlert, X } from 'lucide-react'
 import { BTN_PRIMARY } from '@/lib/styles'
 
 export interface FiltresState {
@@ -11,6 +11,7 @@ export interface FiltresState {
   livresEnAvance: boolean
   enAttente: boolean
   dureesIncoherentes: boolean
+  livresPlusieurs: boolean
   nonDisponibles: boolean
   natio: boolean
   multidiff: boolean
@@ -31,6 +32,7 @@ export const DEFAULT_FILTRES: FiltresState = {
   livresEnAvance: true,
   enAttente: true,
   dureesIncoherentes: true,
+  livresPlusieurs: true,
   nonDisponibles: true,
   natio: false,
   multidiff: false,
@@ -95,6 +97,16 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               />
               <span className="text-[0.9375rem] text-gray-700">Livrés avec une durée incohérente</span>
               <TriangleAlert className="size-4 text-[#d36d27] ml-auto shrink-0" />
+            </label>
+
+            <label className="flex items-center gap-2.5 cursor-pointer">
+              <Checkbox
+                checked={filtres.livresPlusieurs}
+                onCheckedChange={v => set('livresPlusieurs', !!v)}
+                className="size-6 rounded !border-0 !bg-[#ffcfa8e3] text-transparent data-checked:!text-orange-800"
+              />
+              <span className="text-[0.9375rem] text-gray-700">Livrés plusieurs fois (doublons)</span>
+              <Files className="size-4 text-orange-500 ml-auto shrink-0" />
             </label>
 
             <label className="flex items-center gap-2.5 cursor-pointer">

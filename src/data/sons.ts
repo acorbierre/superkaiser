@@ -3,7 +3,7 @@ export type StatutSon =
   | 'livre_avance'
   | 'attente'
   | 'duree_incoherente'
-  | 'non_disponible'
+  | 'livre_plusieurs_fois'
   | 'droits_fermes'
   | 'mid_non_conforme'
 
@@ -36,13 +36,13 @@ export interface Son {
 }
 
 export const STATUT_LABEL: Record<StatutSon, string> = {
-  livre:             'Livré et diffusé',
-  livre_avance:      'Livré en avance',
-  attente:           'En attente',
-  duree_incoherente: 'Durée incohérente',
-  non_disponible:    'Non disponible : plusieurs sons livrés',
-  droits_fermes:     'Non disponible : droits fermés',
-  mid_non_conforme:  'Non disponible : MID non conforme',
+  livre:               'Livré et diffusé',
+  livre_avance:        'Livré en avance',
+  attente:             'En attente',
+  duree_incoherente:   'Durée incohérente',
+  livre_plusieurs_fois: 'Livré plusieurs fois (doublons)',
+  droits_fermes:       'Non disponible : droits fermés',
+  mid_non_conforme:    'Non disponible : MID non conforme',
 }
 
 export const sons: Son[] = [
@@ -201,7 +201,7 @@ export const sons: Son[] = [
     emission: 'La terre au carré',
     titre: 'La terre au carré — spécial forêts',
     numeroMagnetotheque: '2025C3305S0009',
-    statut: 'non_disponible',
+    statut: 'livre_plusieurs_fois',
     detail: {
       titreComplet: 'La terre au carré — spécial forêts',
       diffuseAt: '19/05/2025 à 14:00',

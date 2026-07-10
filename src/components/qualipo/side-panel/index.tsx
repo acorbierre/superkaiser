@@ -23,7 +23,7 @@ export default function SidePanel({ son, onClose }: Props) {
   ]
 
   function effectiveStepState(statut: StatutSon, index: number): StepState {
-    if ((statut === 'non_disponible' || statut === 'mid_non_conforme') && index === 0 && conservedFichier) return 'done'
+    if ((statut === 'livre_plusieurs_fois' || statut === 'mid_non_conforme') && index === 0 && conservedFichier) return 'done'
     return getStepState(statut, index)
   }
 
@@ -132,7 +132,7 @@ export default function SidePanel({ son, onClose }: Props) {
                       </div>
 
                       {(isDone || isError) && (
-                        isError && son.statut === 'non_disponible' ? (
+                        isError && son.statut === 'livre_plusieurs_fois' ? (
                           /* ── Vue doublon non résolu ── */
                           <div className="space-y-3">
                             <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">

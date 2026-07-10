@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react'
-import { Check, Clock, Copy, ExternalLink, TriangleAlert, X } from 'lucide-react'
+import { Check, Clock, Copy, ExternalLink, Files, TriangleAlert, X } from 'lucide-react'
 import type { Son, StatutSon } from '@/data/sons'
 import type { FiltresState } from './filtres-panel'
 import { LINK } from '@/lib/styles'
@@ -14,23 +14,23 @@ const TD        = 'px-3 text-[15px] font-normal text-[#333] align-middle group-h
 const LINK_BOLD = `${LINK} font-medium`
 
 const BG: Record<StatutSon, string> = {
-  livre:             'bg-[#CFECD5]',
-  livre_avance:      'bg-[#CFECD5]',
-  attente:           'bg-white',
-  duree_incoherente: 'bg-[#FFF2C6]',
-  non_disponible:    'bg-[#FFB2B7]',
-  droits_fermes:     'bg-[#FFB2B7]',
-  mid_non_conforme:  'bg-[#FFB2B7]',
+  livre:               'bg-[#CFECD5]',
+  livre_avance:        'bg-[#CFECD5]',
+  attente:             'bg-white',
+  duree_incoherente:   'bg-[#FFF2C6]',
+  livre_plusieurs_fois: 'bg-[#ffcfa8e3]',
+  droits_fermes:       'bg-[#FFB2B7]',
+  mid_non_conforme:    'bg-[#FFB2B7]',
 }
 
 const BORDER: Record<StatutSon, string> = {
-  livre:             'border-[#98d3ac]',
-  livre_avance:      'border-[#98d3ac]',
-  attente:           'border-black/5',
-  duree_incoherente: 'border-[#e8c79d]',
-  non_disponible:    'border-[#ea9797]',
-  droits_fermes:     'border-[#ea9797]',
-  mid_non_conforme:  'border-[#ea9797]',
+  livre:               'border-[#98d3ac]',
+  livre_avance:        'border-[#98d3ac]',
+  attente:             'border-black/5',
+  duree_incoherente:   'border-[#e8c79d]',
+  livre_plusieurs_fois: 'border-[#f5b469]',
+  droits_fermes:       'border-[#ea9797]',
+  mid_non_conforme:    'border-[#ea9797]',
 }
 
 interface Props {
@@ -46,8 +46,8 @@ function StatutCell({ son }: { son: Son }) {
     case 'livre':
     case 'livre_avance':
       return <span className="flex items-center gap-1.5"><Check className="size-4 shrink-0 text-[#25bc95]" />Livré</span>
-    case 'non_disponible':
-      return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : plusieurs sons livrés</span>
+    case 'livre_plusieurs_fois':
+      return <span className="flex items-center gap-1.5"><Files className="size-4 shrink-0 text-orange-500" />Livré plusieurs fois (doublons)</span>
     case 'droits_fermes':
       return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : droits fermés</span>
     case 'mid_non_conforme':
@@ -66,10 +66,10 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
   if (son.statut === 'livre'             && !f.livresDiffuses)    return false
   if (son.statut === 'livre_avance'      && !f.livresEnAvance)    return false
   if (son.statut === 'attente'           && !f.enAttente)         return false
-  if (son.statut === 'duree_incoherente' && !f.dureesIncoherentes) return false
-  if (son.statut === 'non_disponible'    && !f.nonDisponibles)    return false
-  if (son.statut === 'droits_fermes'     && !f.nonDisponibles)    return false
-  if (son.statut === 'mid_non_conforme'  && !f.nonDisponibles)    return false
+  if (son.statut === 'duree_incoherente'   && !f.dureesIncoherentes)   return false
+  if (son.statut === 'livre_plusieurs_fois' && !f.livresPlusieurs)     return false
+  if (son.statut === 'droits_fermes'       && !f.nonDisponibles)       return false
+  if (son.statut === 'mid_non_conforme'    && !f.nonDisponibles)       return false
   return true
 }
 
