@@ -5,6 +5,7 @@ import HabillagesPage from '@/pages/HabillagesPage'
 import HabillageDetailPage from '@/pages/HabillageDetailPage'
 import CalendrierPage from '@/pages/CalendrierPage'
 import ListeEpisodesPage from '@/pages/ListeEpisodesPage'
+import NouvelleReglePage from '@/pages/NouvelleReglePage'
 import ComponentsPage from '@/pages/ComponentsPage'
 
 export default function Router() {
@@ -16,6 +17,7 @@ export default function Router() {
     case 'HabillageDetail': return <HabillageDetailPage />
     case 'Calendrier':      return <CalendrierPage />
     case 'ListeEpisodes':   return <ListeEpisodesPage />
+    case 'NouvelleRegle':   return <NouvelleReglePage />
     case 'Composants':      return <ComponentsPage />
     default:                return <QualipoPage />
   }
