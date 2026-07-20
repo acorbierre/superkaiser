@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Trash2, Plus, List, Check, X } from 'lucide-react'
+import { Trash2, Plus, List, Check, X, Pencil } from 'lucide-react'
 import { ItemTitle } from '@/components/ui/item-title'
 import { SectionTitle } from '@/components/ui/section-title'
 import AudioPlayer from '@/components/qualipo/audio-player'
@@ -192,8 +192,9 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
             <div className="flex items-center gap-3 mt-6">
               <button
                 onClick={() => navigate('NouvelleRegle', { emissionTitre, regleId: String(regle.id) })}
-                className={BTN_SECONDARY}
+                className={`${BTN_SECONDARY} flex items-center gap-1.5`}
               >
+                <Pencil className="size-3.5" />
                 Modifier
               </button>
               <button
