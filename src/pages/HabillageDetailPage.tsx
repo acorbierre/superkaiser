@@ -167,11 +167,11 @@ export default function HabillageDetailPage() {
 
           {/* Sidebar */}
           <div className="self-start">
-            <SectionTitle className="mt-4">{type === 'emission' ? 'Informations du podcast' : 'Informations de l\'épisode'}</SectionTitle>
-            <div className={CARD}>
+            {type !== 'emission' && <SectionTitle className="mt-4">Informations de l'épisode</SectionTitle>}
+            <div className={`${CARD}${type === 'emission' ? ' mt-4' : ''}`}>
             {type === 'emission' ? (
               <>
-                <ItemTitle>Tous les épisodes</ItemTitle>
+                <ItemTitle>Tous les épisodes du podcast</ItemTitle>
                 <button onClick={() => navigate('Calendrier', { titre: type === 'emission' ? (titre ?? '') : (son?.emission ?? '') })} className={`${LINK} mt-3`}><Calendar className="size-4" />Voir le calendrier</button>
                 <button onClick={() => navigate('ListeEpisodes', { titre: titre ?? '' })} className={`${LINK} mt-2`}><List className="size-4" />Voir la liste</button>
               </>

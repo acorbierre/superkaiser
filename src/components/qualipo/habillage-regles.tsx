@@ -11,6 +11,8 @@ import {
   type Regle, type RollConfig, type JourSemaine,
 } from '@/data/regles-store'
 
+const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
+
 // ── Canaux (interne / externe) ─────────────────────────────────────────────────
 
 function CanauxBadges({ interne, externe }: { interne: boolean; externe: boolean }) {
@@ -38,7 +40,7 @@ function RollPairReadOnly({ config }: { config: RollConfig }) {
   return (
     <div className="grid grid-cols-2 gap-6 mt-4">
       <div className="flex flex-col gap-2">
-        <p className="text-[13px] font-medium text-gray-500">Pré-roll</p>
+        <span className={ROLL_PILL}>Pré-roll</span>
         {config.preroll
           ? <>
               <p className="text-[15px] text-gray-900">{config.preroll}</p>
@@ -48,7 +50,7 @@ function RollPairReadOnly({ config }: { config: RollConfig }) {
         }
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-[13px] font-medium text-gray-500">Post-roll</p>
+        <span className={ROLL_PILL}>Post-roll</span>
         {config.postroll
           ? <>
               <p className="text-[15px] text-gray-900">{config.postroll}</p>
@@ -110,26 +112,24 @@ function RegleReadView({ regle }: { regle: Regle }) {
         <div className="flex flex-col">
           <div className="grid grid-cols-[110px_1fr_1fr] gap-4 pb-2 border-b border-gray-200">
             <span />
-            <p className="text-[13px] font-medium text-gray-500">Pré-roll</p>
-            <p className="text-[13px] font-medium text-gray-500">Post-roll</p>
+            <span className={ROLL_PILL}>Pré-roll</span>
+            <span className={ROLL_PILL}>Post-roll</span>
           </div>
           {joursActifs.map(jour => {
             const c = regle.configJours?.[jour] ?? { preroll: '', postroll: '' }
             return (
               <div key={jour} className="flex flex-col gap-3 py-3 border-b border-gray-100">
-                <span className="self-start px-3 py-1 rounded-full bg-gray-100 text-[13px] font-medium text-gray-600">
-                  {JOURS_LABELS[jour]}
-                </span>
+                <span className={ROLL_PILL}>{JOURS_LABELS[jour]}</span>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-1.5">
-                    <p className="text-[13px] font-medium text-gray-500">Pré-roll</p>
+                    <span className={ROLL_PILL}>Pré-roll</span>
                     {c.preroll
                       ? <><p className="text-[15px] text-gray-900">{c.preroll}</p><AudioPlayer compact noBg noDurations dureeLabel="00:00:07" /></>
                       : <p className="text-sm text-gray-400 italic">Aucun habillage</p>
                     }
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <p className="text-[13px] font-medium text-gray-500">Post-roll</p>
+                    <span className={ROLL_PILL}>Post-roll</span>
                     {c.postroll
                       ? <><p className="text-[15px] text-gray-900">{c.postroll}</p><AudioPlayer compact noBg noDurations dureeLabel="00:00:07" /></>
                       : <p className="text-sm text-gray-400 italic">Aucun habillage</p>
@@ -158,7 +158,7 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
 
   return (
     <>
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex items-center justify-between mt-4 mb-3">
         <SectionTitle>Règles d'habillage en cours</SectionTitle>
         <button
           onClick={() => navigate('NouvelleRegle', { emissionTitre })}
@@ -199,7 +199,7 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
               <button
                 onClick={() => setConfirmDeleteId(regle.id)}
                 title="Supprimer"
-                className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-50 cursor-pointer transition-colors text-gray-400 hover:text-red-400"
+                className="w-7 h-7 flex items-center justify-center rounded hover:bg-red-50 cursor-pointer transition-colors text-blue-rf hover:text-red-400"
               >
                 <Trash2 className="size-3.5" />
               </button>

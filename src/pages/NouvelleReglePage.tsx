@@ -14,10 +14,12 @@ import {
   getRegleById, addRegle, updateRegle,
   mockEpisodeCount, formatDateFr,
   SONS_PREROLL, SONS_POSTROLL,
-  JOURS, JOURS_LABELS, JOURS_COURTS, JOURS_SEMAINE, JOURS_WEEKEND,
+  JOURS, JOURS_LABELS, JOURS_SEMAINE, JOURS_WEEKEND,
   MODE_LABELS, EMPTY_CONFIG, defaultConfigJours,
   type ModeTemporalite, type RollConfig, type JourSemaine,
 } from '@/data/regles-store'
+
+const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
 
 const EMISSIONS_IMAGES: Record<string, string> = {
   'À voix nue':              '/emissions/sc_a_voix_nue_1400.jpg',
@@ -98,42 +100,43 @@ function ParJourConfig({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
 
-      {/* Raccourcis */}
-      <div className="flex items-center gap-2 text-sm">
-        <span className="text-gray-400 shrink-0">Raccourcis :</span>
-        <button onClick={() => onChangeJours([...JOURS_SEMAINE])} className="text-blue-rf hover:underline cursor-pointer">Semaine</button>
-        <span className="text-gray-300">·</span>
-        <button onClick={() => onChangeJours([...JOURS_WEEKEND])} className="text-blue-rf hover:underline cursor-pointer">Weekend</button>
-        <span className="text-gray-300">·</span>
-        <button onClick={() => onChangeJours([...JOURS] as JourSemaine[])} className="text-blue-rf hover:underline cursor-pointer">Tous</button>
-        {joursActifs.length > 0 && (
-          <>
-            <span className="text-gray-300">·</span>
-            <button onClick={() => onChangeJours([])} className="text-gray-400 hover:text-gray-600 cursor-pointer">Effacer</button>
-          </>
-        )}
-      </div>
+      {/* Jours de diffusion */}
+      <div className="flex flex-col gap-2">
+        <span className={LABEL}>Jours de diffusion</span>
+        <div className="flex gap-2">
+          {(JOURS as JourSemaine[]).map(jour => {
+            const active = joursActifs.includes(jour)
+            return (
+              <button
+                key={jour}
+                onClick={() => toggleJour(jour)}
+                className={`px-3 h-9 text-[13px] font-medium rounded-[6px] border cursor-pointer transition-colors ${
+                  active
+                    ? 'bg-blue-rf border-blue-rf text-white'
+                    : 'border-blue-rf text-blue-rf hover:bg-blue-rf/5'
+                }`}
+              >
+                {JOURS_LABELS[jour]}
+              </button>
+            )
+          })}
+        </div>
 
-      {/* Chips */}
-      <div className="flex gap-2">
-        {(JOURS as JourSemaine[]).map(jour => {
-          const active = joursActifs.includes(jour)
-          return (
-            <button
-              key={jour}
-              onClick={() => toggleJour(jour)}
-              className={`w-10 h-10 rounded-full text-[13px] font-medium cursor-pointer transition-colors ${
-                active
-                  ? 'bg-blue-rf text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              {JOURS_COURTS[jour]}
-            </button>
-          )
-        })}
+        {/* Raccourcis */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-400 shrink-0">Raccourcis :</span>
+          <button onClick={() => onChangeJours([...JOURS_SEMAINE])} className="text-blue-rf hover:underline cursor-pointer">Semaine</button>
+          <span className="text-gray-300">·</span>
+          <button onClick={() => onChangeJours([...JOURS_WEEKEND])} className="text-blue-rf hover:underline cursor-pointer">Weekend</button>
+          {joursActifs.length > 0 && (
+            <>
+              <span className="text-gray-300">·</span>
+              <button onClick={() => onChangeJours([])} className="text-gray-400 hover:text-gray-600 cursor-pointer">Effacer</button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Blocs par jour actif */}
@@ -143,9 +146,7 @@ function ParJourConfig({
             const c = configJours[jour]
             return (
               <div key={jour} className="flex flex-col gap-3 py-3 border-b border-gray-100">
-                <span className="self-start px-3 py-1 rounded-full bg-gray-100 text-[13px] font-medium text-gray-600">
-                  {JOURS_LABELS[jour]}
-                </span>
+                <span className={ROLL_PILL}>{JOURS_LABELS[jour]}</span>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <span className={LABEL}>Pré-roll</span>
@@ -354,7 +355,7 @@ export default function NouvelleReglePage() {
                 )}
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={handleValider}
                     disabled={!dateDebut || !dateFin}
