@@ -6,7 +6,7 @@ import { SectionTitle } from '@/components/ui/section-title'
 import { SelectField } from '@/components/ui/select-field'
 import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { CARD, LINK, BTN_PRIMARY } from '@/lib/styles'
+import { CARD, LINK, INPUT, LABEL, BTN_PRIMARY } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
 import { STATION } from '@/data/constants'
@@ -35,6 +35,7 @@ export default function HabillageEpisodePage() {
 
   const existing = getHabillageEpisode(episodeTitre)
 
+  const [nom, setNom]           = useState(existing.nom ?? '')
   const [preroll, setPreroll]   = useState(existing.preroll)
   const [postroll, setPostroll] = useState(existing.postroll)
   const [interne, setInterne]   = useState(existing.interne)
@@ -48,7 +49,7 @@ export default function HabillageEpisodePage() {
   const displayEmission  = son?.emission ?? emissionTitre
 
   function handleValider() {
-    setHabillageEpisode(episodeTitre, { preroll, postroll, interne, externe, isPersonnalise: true })
+    setHabillageEpisode(episodeTitre, { nom: nom.trim(), preroll, postroll, interne, externe, isPersonnalise: true })
     navigate('HabillageDetail', { titre: episodeTitre, type: 'diffusion', emission: emissionTitre })
   }
 
@@ -107,19 +108,19 @@ export default function HabillageEpisodePage() {
             <SectionTitle className="mt-4">Modifier l'habillage</SectionTitle>
             <div className={CARD}>
 
-              {/* Titre + interne/externe */}
-              <div className="flex items-start justify-between gap-4">
-                <ItemTitle>{ruleLabel ? `Règle du ${ruleLabel}` : 'Habillage'}</ItemTitle>
-                <div className="flex gap-5 shrink-0">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={interne} onCheckedChange={setInterne} />
-                    <span className="text-[15px] text-gray-700">Interne</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={externe} onCheckedChange={setExterne} />
-                    <span className="text-[15px] text-gray-700">Externe</span>
-                  </label>
-                </div>
+              {/* Titre */}
+              <ItemTitle>{ruleLabel ? `Règle du ${ruleLabel}` : 'Habillage'}</ItemTitle>
+
+              {/* Nom de la règle */}
+              <div className="flex flex-col gap-2 mt-6">
+                <span className={LABEL}>Nom de la règle (facultatif)</span>
+                <input
+                  type="text"
+                  value={nom}
+                  onChange={e => setNom(e.target.value)}
+                  placeholder="Ex : Habillage spécial été"
+                  className={`${INPUT} w-full max-w-md`}
+                />
               </div>
 
               {/* 2 colonnes pré/post-roll */}
@@ -142,6 +143,18 @@ export default function HabillageEpisodePage() {
                 </div>
               </div>
 
+              {/* Interne / Externe */}
+              <div className="flex gap-5 mt-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Switch checked={interne} onCheckedChange={setInterne} />
+                  <span className="text-[15px] text-gray-700">Interne</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Switch checked={externe} onCheckedChange={setExterne} />
+                  <span className="text-[15px] text-gray-700">Externe</span>
+                </label>
+              </div>
+
               {/* Actions */}
               <div className="flex items-center gap-3 mt-6">
                 <button onClick={handleValider} className={BTN_PRIMARY}>Valider</button>
@@ -155,8 +168,7 @@ export default function HabillageEpisodePage() {
 
           {/* Sidebar */}
           <div className="self-start">
-            <SectionTitle className="mt-4">Informations de l'épisode</SectionTitle>
-            <div className={CARD}>
+            <div className={`${CARD} mt-4`}>
               <ItemTitle>Date de diffusion</ItemTitle>
               <p className="mt-3 text-sm text-gray-600">{displayDiffuseAt}</p>
               <div className="mt-6"><ItemTitle>Date de libération du son</ItemTitle></div>

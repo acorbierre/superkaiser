@@ -184,8 +184,10 @@ export default function NouvelleReglePage() {
   const existingRegle = regleId ? getRegleById(emissionTitre, Number(regleId)) : undefined
   const isEditing = !!existingRegle
 
+  const [nom, setNom]                     = useState(existingRegle?.nom ?? '')
   const [dateDebut, setDateDebut]         = useState(existingRegle?.dateDebut ?? '')
   const [dateFin, setDateFin]             = useState(existingRegle?.dateFin ?? '')
+  const [sansDateFin, setSansDateFin]     = useState(!!existingRegle && !existingRegle.dateFin)
   const [mode, setMode]                   = useState<ModeTemporalite>(existingRegle?.modeTemporalite ?? 'tous')
   const [interne, setInterne]             = useState(existingRegle?.interne ?? true)
   const [externe, setExterne]             = useState(existingRegle?.externe ?? true)
@@ -203,6 +205,7 @@ export default function NouvelleReglePage() {
   function handleValider() {
     const regle = {
       id: existingRegle?.id ?? Date.now(),
+      nom: nom.trim(),
       dateDebut, dateFin,
       appliedDateDebut: dateDebut,
       appliedDateFin: dateFin,
@@ -277,25 +280,25 @@ export default function NouvelleReglePage() {
             <SectionTitle className="mt-4">{isEditing ? 'Modifier la règle' : 'Nouvelle règle'}</SectionTitle>
             <div className={CARD}>
 
-              {/* Titre + interne/externe */}
-              <div className="flex items-start justify-between gap-4">
-                <ItemTitle>{isEditing
-                  ? `${formatDateFr(existingRegle.appliedDateDebut)} → ${formatDateFr(existingRegle.appliedDateFin)}`
-                  : 'Nouvelle règle'
-                }</ItemTitle>
-                <div className="flex gap-5 shrink-0">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={interne} onCheckedChange={setInterne} />
-                    <span className="text-[15px] text-gray-700">Interne</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={externe} onCheckedChange={setExterne} />
-                    <span className="text-[15px] text-gray-700">Externe</span>
-                  </label>
-                </div>
-              </div>
+              {/* Titre */}
+              <ItemTitle>{isEditing
+                ? `${formatDateFr(existingRegle.appliedDateDebut)} → ${formatDateFr(existingRegle.appliedDateFin)}`
+                : 'Nouvelle règle'
+              }</ItemTitle>
 
               <div className="flex flex-col gap-6 mt-6">
+
+                {/* Nom de la règle */}
+                <div className="flex flex-col gap-2">
+                  <span className={LABEL}>Nom de la règle (facultatif)</span>
+                  <input
+                    type="text"
+                    value={nom}
+                    onChange={e => setNom(e.target.value)}
+                    placeholder="Ex : Habillage spécial été"
+                    className={`${INPUT} w-full max-w-md`}
+                  />
+                </div>
 
                 {/* Période */}
                 <div className="flex flex-col gap-2">
@@ -313,9 +316,20 @@ export default function NouvelleReglePage() {
                       type="date"
                       value={dateFin}
                       onChange={e => setDateFin(e.target.value)}
-                      className={`${INPUT} w-40`}
-                      style={!dateFin ? { color: '#d1d5db' } : undefined}
+                      disabled={sansDateFin}
+                      className={`${INPUT} w-40 disabled:bg-gray-50 disabled:text-gray-300`}
+                      style={!dateFin && !sansDateFin ? { color: '#d1d5db' } : undefined}
                     />
+                    <label className="flex items-center gap-2 cursor-pointer ml-2">
+                      <Switch
+                        checked={sansDateFin}
+                        onCheckedChange={checked => {
+                          setSansDateFin(checked)
+                          if (checked) setDateFin('')
+                        }}
+                      />
+                      <span className="text-[15px] text-gray-700">Pas de date de fin</span>
+                    </label>
                   </div>
                 </div>
 
@@ -354,11 +368,23 @@ export default function NouvelleReglePage() {
                   />
                 )}
 
+                {/* Interne / Externe */}
+                <div className="flex gap-5">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Switch checked={interne} onCheckedChange={setInterne} />
+                    <span className="text-[15px] text-gray-700">Interne</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Switch checked={externe} onCheckedChange={setExterne} />
+                    <span className="text-[15px] text-gray-700">Externe</span>
+                  </label>
+                </div>
+
                 {/* Actions */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleValider}
-                    disabled={!dateDebut || !dateFin}
+                    disabled={!dateDebut || (!sansDateFin && !dateFin)}
                     className={`${BTN_PRIMARY} disabled:opacity-40 disabled:cursor-not-allowed`}
                   >
                     Valider

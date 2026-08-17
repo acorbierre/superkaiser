@@ -11,6 +11,7 @@ export interface RollConfig {
 
 export interface Regle {
   id: number
+  nom?: string
   dateDebut: string
   dateFin: string
   appliedDateDebut: string
@@ -100,6 +101,7 @@ export function mockEpisodeCount(debut: string, fin: string): number {
 const REGLES_INIT: Regle[] = [
   {
     id: 2,
+    nom: 'Habillage spécial été',
     dateDebut: '2026-07-01', dateFin: '2026-07-31',
     appliedDateDebut: '2026-07-01', appliedDateFin: '2026-07-31',
     nbEpisodes: 3,
@@ -110,6 +112,7 @@ const REGLES_INIT: Regle[] = [
   },
   {
     id: 1,
+    nom: 'Habillage alterné juin',
     dateDebut: '2026-06-01', dateFin: '2026-06-30',
     appliedDateDebut: '2026-06-01', appliedDateFin: '2026-06-30',
     nbEpisodes: 4,

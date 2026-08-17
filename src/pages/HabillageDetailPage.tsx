@@ -17,6 +17,7 @@ import { CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
 import { STATION } from '@/data/constants'
+import { getRegles, formatDateFr } from '@/data/regles-store'
 
 function extractBR(programme: string): string {
   const match = programme.match(/BR\s*:\s*(\d+)/)
@@ -45,6 +46,16 @@ export default function HabillageDetailPage() {
   const displayDiffuseAt = son?.detail.diffuseAt ?? fallback.diffuseAt
   const displayMID = son?.numeroMagnetotheque ?? fallback.numeroMagnetotheque
   const displayPodcastLabel = son?.detail.podcastPrincipalLabel ?? fallback.podcastPrincipalLabel
+
+  const activeRegle = useMemo(() => {
+    if (type !== 'diffusion') return undefined
+    const regles = getRegles(son?.emission ?? emission ?? '')
+    return regles[0]
+  }, [type, son, emission])
+
+  const ruleLabel = activeRegle
+    ? `${formatDateFr(activeRegle.appliedDateDebut)} → ${activeRegle.appliedDateFin ? formatDateFr(activeRegle.appliedDateFin) : 'en cours'}`
+    : undefined
 
   function copyMID() {
     if (!son?.numeroMagnetotheque) return
@@ -160,15 +171,19 @@ export default function HabillageDetailPage() {
             ) : (
               <>
                 <SectionTitle className="mt-4">Règles en cours</SectionTitle>
-                <HabillageBloc episodeTitre={titre ?? ''} emissionTitre={son?.emission ?? emission ?? ''} ruleLabel="01/07 → 31/07" />
+                <HabillageBloc
+                  episodeTitre={titre ?? ''}
+                  emissionTitre={son?.emission ?? emission ?? ''}
+                  ruleLabel={ruleLabel}
+                  ruleNom={activeRegle?.nom}
+                />
               </>
             )}
           </div>
 
           {/* Sidebar */}
           <div className="self-start">
-            {type !== 'emission' && <SectionTitle className="mt-4">Informations de l'épisode</SectionTitle>}
-            <div className={`${CARD}${type === 'emission' ? ' mt-4' : ''}`}>
+            <div className={`${CARD} mt-4`}>
             {type === 'emission' ? (
               <>
                 <ItemTitle>Tous les épisodes du podcast</ItemTitle>

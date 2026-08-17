@@ -7,11 +7,123 @@ import { CARD, BTN_PRIMARY, BTN_SECONDARY } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import {
   getRegles, removeRegle, subscribe, formatDateFr,
-  MODE_LABELS, JOURS, JOURS_LABELS, JOURS_COURTS,
+  MODE_LABELS, JOURS, JOURS_LABELS, JOURS_COURTS, MOIS,
   type Regle, type RollConfig, type JourSemaine,
 } from '@/data/regles-store'
 
 const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
+
+// ── Timeline récap des règles ───────────────────────────────────────────────────
+
+const TIMELINE_PALETTE = ['bg-blue-rf', 'bg-violet-500', 'bg-teal-500', 'bg-amber-500', 'bg-pink-500']
+
+function buildMonthTicks(minMs: number, maxMs: number): { key: string; label: string; pct: number }[] {
+  const range = maxMs - minMs || 1
+  const start = new Date(minMs)
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+  const ticks: { key: string; label: string; pct: number }[] = []
+  let guard = 0
+  while (cursor.getTime() <= maxMs && guard < 12) {
+    const pct = ((cursor.getTime() - minMs) / range) * 100
+    ticks.push({
+      key: `${cursor.getFullYear()}-${cursor.getMonth()}`,
+      label: `${MOIS[cursor.getMonth()]} ${String(cursor.getFullYear()).slice(2)}`,
+      pct: Math.min(Math.max(pct, 0), 100),
+    })
+    cursor.setMonth(cursor.getMonth() + 1)
+    guard++
+  }
+  return ticks
+}
+
+function ReglesTimeline({
+  regles, onSelectRegle, onAddRegle,
+}: {
+  regles: Regle[]
+  onSelectRegle: (id: number) => void
+  onAddRegle: () => void
+}) {
+  if (regles.length === 0) return null
+
+  const sorted = [...regles].sort((a, b) => a.appliedDateDebut.localeCompare(b.appliedDateDebut))
+
+  const starts = sorted.map(r => new Date(r.appliedDateDebut).getTime())
+  const finiteEnds = sorted.filter(r => r.appliedDateFin).map(r => new Date(r.appliedDateFin).getTime())
+  const today = Date.now()
+  const minDate = Math.min(...starts)
+  const maxDate = Math.max(...starts, ...finiteEnds, today)
+  const range = Math.max(maxDate - minDate, 1000 * 60 * 60 * 24)
+
+  const monthTicks = buildMonthTicks(minDate, maxDate)
+
+  const segments = sorted.map((r, i) => {
+    const ongoing = !r.appliedDateFin
+    const start = new Date(r.appliedDateDebut).getTime()
+    const end = ongoing ? maxDate : new Date(r.appliedDateFin).getTime()
+    const left = ((start - minDate) / range) * 100
+    const width = Math.max(((end - start) / range) * 100, 1.5)
+    const label = `${formatDateFr(r.appliedDateDebut)} → ${ongoing ? 'en cours' : formatDateFr(r.appliedDateFin)}`
+    return { regle: r, color: TIMELINE_PALETTE[i % TIMELINE_PALETTE.length], left, width, ongoing, label }
+  })
+
+  return (
+    <div className={CARD}>
+      <ItemTitle>{regles.length} règle{regles.length > 1 ? 's' : ''} active{regles.length > 1 ? 's' : ''}</ItemTitle>
+
+      {/* Nom + dates par segment */}
+      <div className="relative mt-8 h-10">
+        {segments.map(s => (
+          <div
+            key={s.regle.id}
+            className="absolute flex flex-col gap-0.5"
+            style={{ left: `${s.left}%` }}
+          >
+            <span className="text-[13px] font-semibold text-gray-700 whitespace-nowrap">
+              {s.regle.nom || ' '}
+            </span>
+            <span className="text-[13px] text-gray-500 whitespace-nowrap">{s.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Piste */}
+      <div className="relative mt-3 h-2">
+        {segments.map(s => (
+          <button
+            key={s.regle.id}
+            type="button"
+            onClick={() => onSelectRegle(s.regle.id)}
+            title={s.label}
+            className={`absolute top-1/2 -translate-y-1/2 h-2 rounded-full cursor-pointer transition-transform duration-150 hover:scale-y-150 ${s.color}`}
+            style={{
+              left: `${s.left}%`,
+              width: `${s.width}%`,
+              maskImage: s.ongoing ? 'linear-gradient(to right, black 80%, transparent 100%)' : undefined,
+            }}
+          />
+        ))}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 rounded-full bg-gray-100 -z-10" />
+      </div>
+
+      <div className="relative mt-2 h-4">
+        {monthTicks.map(t => (
+          <span
+            key={t.key}
+            className="absolute -translate-x-1/2 text-[11px] text-gray-400 whitespace-nowrap"
+            style={{ left: `${t.pct}%` }}
+          >
+            {t.label}
+          </span>
+        ))}
+      </div>
+
+      <button onClick={onAddRegle} className={`${BTN_PRIMARY} mt-6`}>
+        <Plus className="size-4" />
+        Ajouter une règle
+      </button>
+    </div>
+  )
+}
 
 // ── Canaux (interne / externe) ─────────────────────────────────────────────────
 
@@ -156,40 +268,45 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
 
   const regles = getRegles(emissionTitre)
 
+  function scrollToRegle(id: number) {
+    document.getElementById(`regle-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <>
-      <div className="flex items-center justify-between mt-4 mb-3">
-        <SectionTitle>Règles d'habillage en cours</SectionTitle>
-        <button
-          onClick={() => navigate('NouvelleRegle', { emissionTitre })}
-          className={BTN_PRIMARY}
-        >
-          <Plus className="size-4" />
-          Nouvelle règle
-        </button>
-      </div>
-      <div className="flex flex-col gap-3">
+      <SectionTitle className="mt-4 mb-3">Règles d'habillage en cours</SectionTitle>
+
+      <ReglesTimeline
+        regles={regles}
+        onSelectRegle={scrollToRegle}
+        onAddRegle={() => navigate('NouvelleRegle', { emissionTitre })}
+      />
+
+      <div className="flex flex-col gap-3 mt-4">
 
         {regles.map(regle => (
-          <div key={regle.id} className={CARD}>
+          <div key={regle.id} id={`regle-${regle.id}`} className={CARD}>
 
-            {/* En-tête : date + mode + canaux */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <ItemTitle>
-                  {regle.appliedDateDebut && regle.appliedDateFin
-                    ? `${formatDateFr(regle.appliedDateDebut)} → ${formatDateFr(regle.appliedDateFin)}`
-                    : 'Nouvelle règle'
-                  }
-                </ItemTitle>
-                <span className="text-[13px] text-gray-400">{MODE_LABELS[regle.modeTemporalite]}</span>
-              </div>
-              <CanauxBadges interne={regle.interne} externe={regle.externe} />
+            {/* En-tête : nom + date + mode */}
+            <div className="flex flex-col gap-1">
+              <ItemTitle>
+                {regle.appliedDateDebut ? (
+                  regle.nom
+                    ? `${regle.nom} (${formatDateFr(regle.appliedDateDebut)} → ${regle.appliedDateFin ? formatDateFr(regle.appliedDateFin) : 'en cours'})`
+                    : `${formatDateFr(regle.appliedDateDebut)} → ${regle.appliedDateFin ? formatDateFr(regle.appliedDateFin) : 'en cours'}`
+                ) : 'Nouvelle règle'}
+              </ItemTitle>
+              <span className="text-[13px] text-gray-400">{MODE_LABELS[regle.modeTemporalite]}</span>
             </div>
 
             <RegleReadView regle={regle} />
 
-            <div className="flex items-center gap-3 mt-6">
+            {/* Canaux */}
+            <div className="mt-6">
+              <CanauxBadges interne={regle.interne} externe={regle.externe} />
+            </div>
+
+            <div className="flex items-center gap-3 mt-4">
               <button
                 onClick={() => navigate('NouvelleRegle', { emissionTitre, regleId: String(regle.id) })}
                 className={`${BTN_SECONDARY} flex items-center gap-1.5`}
