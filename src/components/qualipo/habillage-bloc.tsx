@@ -50,7 +50,7 @@ export function HabillageBloc({ emissionTitre, episodeTitre, ruleLabel, ruleNom 
                 onClick={() => navigate('HabillageDetail', { titre: emissionTitre, type: 'emission' })}
                 className="text-blue-rf hover:underline cursor-pointer"
               >
-                règle émission du {ruleLabel}
+                règle émission
               </button>.
             </p>
           )
@@ -98,7 +98,7 @@ export function HabillageBloc({ emissionTitre, episodeTitre, ruleLabel, ruleNom 
           className={`${BTN_SECONDARY} flex items-center gap-1.5`}
         >
           <Pencil className="size-3.5" />
-          Modifier
+          {h.isPersonnalise ? 'Modifier' : 'Personnaliser'}
         </button>
       </div>
 

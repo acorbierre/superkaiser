@@ -277,13 +277,13 @@ export default function NouvelleReglePage() {
 
           {/* Formulaire */}
           <div>
-            <SectionTitle className="mt-4">{isEditing ? 'Modifier la règle' : 'Nouvelle règle'}</SectionTitle>
+            <SectionTitle className="mt-4">{isEditing ? 'Modifier la règle' : 'Ajouter une règle'}</SectionTitle>
             <div className={CARD}>
 
               {/* Titre */}
               <ItemTitle>{isEditing
                 ? `${formatDateFr(existingRegle.appliedDateDebut)} → ${formatDateFr(existingRegle.appliedDateFin)}`
-                : 'Nouvelle règle'
+                : 'Nouvelle règle d\'habillage'
               }</ItemTitle>
 
               <div className="flex flex-col gap-6 mt-6">

@@ -210,16 +210,13 @@ function RegleReadView({ regle }: { regle: Regle }) {
       {/* Détail par jour actif */}
       {joursActifs.length > 0 && (
         <div className="flex flex-col">
-          <div className="grid grid-cols-[110px_1fr_1fr] gap-4 pb-2 border-b border-gray-200">
-            <span />
-            <span className={ROLL_PILL}>Pré-roll</span>
-            <span className={ROLL_PILL}>Post-roll</span>
-          </div>
           {joursActifs.map(jour => {
             const c = regle.configJours?.[jour] ?? { preroll: '', postroll: '' }
             return (
               <div key={jour} className="flex flex-col gap-3 py-3 border-b border-gray-100">
-                <span className={ROLL_PILL}>{JOURS_LABELS[jour]}</span>
+                <span className="self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-blue-rf text-white">
+                  {JOURS_LABELS[jour]}
+                </span>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-1.5">
                     <span className={ROLL_PILL}>Pré-roll</span>
