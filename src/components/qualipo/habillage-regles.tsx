@@ -70,9 +70,9 @@ function ReglesTimeline({
     <div className={CARD}>
       <ItemTitle>{regles.length} règle{regles.length > 1 ? 's' : ''} active{regles.length > 1 ? 's' : ''}</ItemTitle>
 
-      {/* Segments : nom + dates + piste, zone de hover unifiee */}
-      <div className="relative mt-8 h-[54px]">
-        <div className="absolute inset-x-0 top-[48px] h-1.5 rounded-full bg-gray-100 -z-10" />
+      {/* Segments : nom + piste, zone de hover unifiee */}
+      <div className="relative mt-8 h-[34px]">
+        <div className="absolute inset-x-0 top-[28px] h-1.5 rounded-full bg-gray-100 -z-10" />
         {segments.map(s => (
           <button
             key={s.regle.id}
@@ -85,7 +85,6 @@ function ReglesTimeline({
             <span className="text-[14px] leading-4 font-semibold text-gray-700 whitespace-nowrap">
               {s.regle.nom || ' '}
             </span>
-            <span className="text-[14px] leading-4 text-gray-500 whitespace-nowrap mt-1">{s.label}</span>
             <span
               className={`block w-full h-1.5 rounded-full mt-3 transition-transform duration-150 group-hover:scale-y-150 ${s.color}`}
               style={{ maskImage: s.ongoing ? 'linear-gradient(to right, black 80%, transparent 100%)' : undefined }}

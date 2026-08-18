@@ -102,8 +102,8 @@ const REGLES_INIT: Regle[] = [
   {
     id: 2,
     nom: 'Habillage spécial été',
-    dateDebut: '2026-07-01', dateFin: '2026-07-31',
-    appliedDateDebut: '2026-07-01', appliedDateFin: '2026-07-31',
+    dateDebut: '2026-07-01', dateFin: '2026-08-31',
+    appliedDateDebut: '2026-07-01', appliedDateFin: '2026-08-31',
     nbEpisodes: 3,
     modeTemporalite: 'tous',
     interne: true,
