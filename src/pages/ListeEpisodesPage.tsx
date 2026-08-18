@@ -51,6 +51,7 @@ function formatDate(d: Date) {
 export default function ListeEpisodesPage() {
   const { params, navigate } = useNavigation()
   const { titre } = params
+  const [recherche, setRecherche] = useState('')
   const [dateDebut, setDateDebut] = useState(params.dateDebut ?? '')
   const [dateFin, setDateFin]     = useState(params.dateFin ?? '')
   const [appliedRange, setAppliedRange] = useState({ debut: params.dateDebut ?? '', fin: params.dateFin ?? '' })
@@ -58,14 +59,15 @@ export default function ListeEpisodesPage() {
 
   const filteredEpisodes = useMemo(() => {
     const { debut, fin } = appliedRange
-    if (!debut && !fin) return MOCK_EPISODES
+    const query = recherche.trim().toLowerCase()
     return MOCK_EPISODES.filter(ep => {
       const d = ep.date
       if (debut && d < new Date(debut)) return false
       if (fin && d > new Date(fin + 'T23:59:59')) return false
+      if (query && !ep.titre.toLowerCase().includes(query)) return false
       return true
     })
-  }, [appliedRange])
+  }, [appliedRange, recherche])
 
   const [selected, setSelected] = useState<Set<number>>(new Set())
 
@@ -125,6 +127,16 @@ export default function ListeEpisodesPage() {
         {/* Card filtre période */}
         <div className="bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.07)] p-8 mb-6">
           <div className="flex items-end gap-4">
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>Recherche</label>
+              <input
+                type="text"
+                value={recherche}
+                onChange={e => setRecherche(e.target.value)}
+                placeholder="Titre de la diffusion…"
+                className={`${INPUT} w-64`}
+              />
+            </div>
             <div className="flex flex-col gap-1">
               <label className={LABEL}>Filtrer du</label>
               <input

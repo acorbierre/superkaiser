@@ -170,7 +170,7 @@ export default function HabillageDetailPage() {
               <HabillageRegles emissionTitre={titre ?? ''} />
             ) : (
               <>
-                <SectionTitle className="mt-4">Règles en cours</SectionTitle>
+                <SectionTitle className="mt-4 mb-5">Règles en cours</SectionTitle>
                 <HabillageBloc
                   episodeTitre={titre ?? ''}
                   emissionTitre={son?.emission ?? emission ?? ''}

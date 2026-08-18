@@ -70,46 +70,35 @@ function ReglesTimeline({
     <div className={CARD}>
       <ItemTitle>{regles.length} règle{regles.length > 1 ? 's' : ''} active{regles.length > 1 ? 's' : ''}</ItemTitle>
 
-      {/* Nom + dates par segment */}
-      <div className="relative mt-8 h-10">
-        {segments.map(s => (
-          <div
-            key={s.regle.id}
-            className="absolute flex flex-col gap-0.5"
-            style={{ left: `${s.left}%` }}
-          >
-            <span className="text-[13px] font-semibold text-gray-700 whitespace-nowrap">
-              {s.regle.nom || ' '}
-            </span>
-            <span className="text-[13px] text-gray-500 whitespace-nowrap">{s.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Piste */}
-      <div className="relative mt-3 h-2">
+      {/* Segments : nom + dates + piste, zone de hover unifiee */}
+      <div className="relative mt-8 h-[54px]">
+        <div className="absolute inset-x-0 top-[48px] h-1.5 rounded-full bg-gray-100 -z-10" />
         {segments.map(s => (
           <button
             key={s.regle.id}
             type="button"
             onClick={() => onSelectRegle(s.regle.id)}
             title={s.label}
-            className={`absolute top-1/2 -translate-y-1/2 h-2 rounded-full cursor-pointer transition-transform duration-150 hover:scale-y-150 ${s.color}`}
-            style={{
-              left: `${s.left}%`,
-              width: `${s.width}%`,
-              maskImage: s.ongoing ? 'linear-gradient(to right, black 80%, transparent 100%)' : undefined,
-            }}
-          />
+            className="group absolute top-0 flex flex-col items-start text-left cursor-pointer"
+            style={{ left: `${s.left}%`, width: `${s.width}%` }}
+          >
+            <span className="text-[14px] leading-4 font-semibold text-gray-700 whitespace-nowrap">
+              {s.regle.nom || ' '}
+            </span>
+            <span className="text-[14px] leading-4 text-gray-500 whitespace-nowrap mt-1">{s.label}</span>
+            <span
+              className={`block w-full h-1.5 rounded-full mt-3 transition-transform duration-150 group-hover:scale-y-150 ${s.color}`}
+              style={{ maskImage: s.ongoing ? 'linear-gradient(to right, black 80%, transparent 100%)' : undefined }}
+            />
+          </button>
         ))}
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 rounded-full bg-gray-100 -z-10" />
       </div>
 
       <div className="relative mt-2 h-4">
         {monthTicks.map(t => (
           <span
             key={t.key}
-            className="absolute -translate-x-1/2 text-[11px] text-gray-400 whitespace-nowrap"
+            className="absolute text-[13px] text-gray-500 whitespace-nowrap"
             style={{ left: `${t.pct}%` }}
           >
             {t.label}
@@ -274,7 +263,7 @@ export function HabillageRegles({ emissionTitre }: { emissionTitre: string }) {
 
   return (
     <>
-      <SectionTitle className="mt-4 mb-3">Règles d'habillage en cours</SectionTitle>
+      <SectionTitle className="mt-4 mb-5">Règles d'habillage en cours</SectionTitle>
 
       <ReglesTimeline
         regles={regles}
