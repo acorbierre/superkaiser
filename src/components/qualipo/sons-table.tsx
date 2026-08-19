@@ -63,6 +63,7 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
   if (recherche && !son.emission.toLowerCase().includes(recherche.toLowerCase())) return false
   if (son.badge === 'NATIO'     && !f.natio)              return false
   if (son.badge === 'MULTIDIFF' && !f.multidiff)          return false
+  if (son.natif                 && !f.natifs)             return false
   if (son.statut === 'livre'             && !f.livresDiffuses)    return false
   if (son.statut === 'livre_avance'      && !f.livresEnAvance)    return false
   if (son.statut === 'attente'           && !f.enAttente)         return false
@@ -162,7 +163,16 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
               <td className={`${TD} whitespace-nowrap font-light`}>{son.date}</td>
               <td className={`${TD} whitespace-nowrap font-light`}>{son.debut}</td>
               <td className={`${TD} whitespace-nowrap font-light`}>{son.fin}</td>
-              <td className={`${TD} font-semibold max-w-0`}><span className="block truncate">{son.emission}</span></td>
+              <td className={`${TD} font-semibold max-w-0`}>
+                <div className="flex items-center gap-1.5 truncate">
+                  {son.natif && (
+                    <span className="text-[11px] font-bold px-1 py-0.5 bg-blue-600 text-white rounded leading-none shrink-0">
+                      NATIF
+                    </span>
+                  )}
+                  <span className="truncate uppercase">{son.emission}</span>
+                </div>
+              </td>
 
               {/* Titre — tronqué */}
               <td className={`${TD} max-w-0`}>
@@ -198,7 +208,7 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
                   >
                     {copiedId === son.id
                       ? <Check className="size-3.5 text-green-600" />
-                      : <Copy className="size-3.5 text-gray-400 hover:text-black" />
+                      : <Copy className="size-3.5 text-black" />
                     }
                   </button>
                 </div>

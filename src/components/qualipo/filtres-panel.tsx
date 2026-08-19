@@ -15,6 +15,7 @@ export interface FiltresState {
   nonDisponibles: boolean
   natio: boolean
   multidiff: boolean
+  natifs: boolean
   toleranceMinutes: number
   tolerancePct: number
   joursPassés: number
@@ -36,6 +37,7 @@ export const DEFAULT_FILTRES: FiltresState = {
   nonDisponibles: true,
   natio: false,
   multidiff: false,
+  natifs: true,
   toleranceMinutes: 2,
   tolerancePct: 10,
   joursPassés: 3,
@@ -139,6 +141,16 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
               />
               <Label className="text-[0.9375rem] text-gray-700 cursor-pointer flex items-center gap-1">
                 Multidiff <span className="text-gray-400 text-xs">ℹ</span>
+              </Label>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Switch
+                checked={filtres.natifs}
+                onCheckedChange={v => set('natifs', v)}
+                className="cursor-pointer data-checked:!bg-[#463acb] shrink-0"
+              />
+              <Label className="text-[0.9375rem] text-gray-700 cursor-pointer flex items-center gap-1">
+                Natifs <span className="text-gray-400 text-xs">ℹ</span>
               </Label>
             </div>
           </div>

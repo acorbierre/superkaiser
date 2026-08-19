@@ -68,7 +68,7 @@ export default function SidePanel({ son, onClose }: Props) {
                     <span className="text-gray-500">{son.numeroMagnetotheque}</span>
                     <button
                       onClick={() => navigator.clipboard.writeText(son.numeroMagnetotheque)}
-                      className="text-gray-400 hover:text-[#333] transition-colors cursor-pointer"
+                      className="text-black transition-colors cursor-pointer"
                     >
                       <Copy className="size-3.5" />
                     </button>

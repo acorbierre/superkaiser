@@ -26,6 +26,7 @@ export interface Son {
   numeroMagnetotheque: string
   statut: StatutSon
   badge?: 'NATIO' | 'MULTIDIFF'
+  natif?: boolean
   sousElements?: { titre: string; statut: StatutSon }[]
   // duree_incoherente
   dureeAttendue?: string   // ex: "58min 00s"
@@ -312,6 +313,42 @@ export const sons: Son[] = [
       diffuseAt: '19/05/2025 à 22:00',
       publiAt: '19/05/2025 à 22:00',
       programme: 'Les nuits de France Inter (BR : 10015)',
+    },
+  },
+  {
+    id: '16',
+    date: '19 Mai',
+    debut: '5:00',
+    fin: '5:45',
+    emission: 'Les Baladeurs',
+    titre: 'Les Baladeurs — épisode 12 : sur la route',
+    numeroMagnetotheque: '2025C3305S0016',
+    statut: 'livre',
+    natif: true,
+    detail: {
+      titreComplet: 'Les Baladeurs — épisode 12 : sur la route',
+      diffuseAt: '19/05/2025 à 05:00',
+      publiAt: '19/05/2025 à 05:00',
+      programme: 'Les Baladeurs (BR : 10016)',
+      podcastPrincipalLabel: 'Les Baladeurs',
+    },
+  },
+  {
+    id: '17',
+    date: '19 Mai',
+    debut: '5:30',
+    fin: '5:58',
+    emission: 'Sous le radar',
+    titre: 'Sous le radar — Enquête sur les algorithmes',
+    numeroMagnetotheque: '2025C3305S0017',
+    statut: 'livre',
+    natif: true,
+    detail: {
+      titreComplet: 'Sous le radar — Enquête sur les algorithmes',
+      diffuseAt: '19/05/2025 à 05:30',
+      publiAt: '19/05/2025 à 05:30',
+      programme: 'Sous le radar (BR : 10017)',
+      podcastPrincipalLabel: 'Sous le radar',
     },
   },
 ]
