@@ -167,7 +167,7 @@ export default function SonsTable({ sons, filtres, recherche, onSelectSon, loadi
                 <div className="flex items-center gap-1.5 truncate">
                   {son.natif && (
                     <span className="text-[11px] font-bold px-1 py-0.5 bg-blue-600 text-white rounded leading-none shrink-0">
-                      NATIF
+                      WEB
                     </span>
                   )}
                   <span className="truncate uppercase">{son.emission}</span>

@@ -150,7 +150,7 @@ export default function FiltresPanel({ filtres, onChange, onActualiser }: Props)
                 className="cursor-pointer data-checked:!bg-[#463acb] shrink-0"
               />
               <Label className="text-[0.9375rem] text-gray-700 cursor-pointer flex items-center gap-1">
-                Natifs <span className="text-gray-400 text-xs">ℹ</span>
+                Web <span className="text-gray-400 text-xs">ℹ</span>
               </Label>
             </div>
           </div>
