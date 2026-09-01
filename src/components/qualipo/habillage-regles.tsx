@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Trash2, Plus, List, Check, X, Pencil } from 'lucide-react'
+import { Trash2, Plus, List, Pencil } from 'lucide-react'
 import { ItemTitle } from '@/components/ui/item-title'
 import { SectionTitle } from '@/components/ui/section-title'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { CARD, BTN_PRIMARY, BTN_SECONDARY } from '@/lib/styles'
+import { CanauxBadges, RollPairReadOnly } from '@/components/qualipo/habillage-shared'
+import { CARD, ROLL_PILL, BTN_PRIMARY, BTN_SECONDARY } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import {
   getRegles, removeRegle, subscribe, formatDateFr,
   MODE_LABELS, JOURS, JOURS_LABELS, JOURS_COURTS, MOIS,
-  type Regle, type RollConfig, type JourSemaine,
+  type Regle, type JourSemaine,
 } from '@/data/regles-store'
-
-const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
 
 // ── Timeline récap des règles ───────────────────────────────────────────────────
 
@@ -109,56 +108,6 @@ function ReglesTimeline({
         <Plus className="size-4" />
         Ajouter une règle
       </button>
-    </div>
-  )
-}
-
-// ── Canaux (interne / externe) ─────────────────────────────────────────────────
-
-function CanauxBadges({ interne, externe }: { interne: boolean; externe: boolean }) {
-  return (
-    <div className="flex items-center gap-3 shrink-0">
-      {(['interne', 'externe'] as const).map(canal => {
-        const on = canal === 'interne' ? interne : externe
-        return (
-          <span key={canal} className={`flex items-center gap-1 text-sm ${on ? 'text-gray-700' : 'text-gray-300'}`}>
-            {on
-              ? <Check className="size-3.5 text-blue-rf" strokeWidth={2.5} />
-              : <X className="size-3.5 text-gray-300" strokeWidth={2.5} />
-            }
-            {canal.charAt(0).toUpperCase() + canal.slice(1)}
-          </span>
-        )
-      })}
-    </div>
-  )
-}
-
-// ── Affichage 2 colonnes pré/post-roll ────────────────────────────────────────
-
-function RollPairReadOnly({ config }: { config: RollConfig }) {
-  return (
-    <div className="grid grid-cols-2 gap-6 mt-4">
-      <div className="flex flex-col gap-2">
-        <span className={ROLL_PILL}>Pré-roll</span>
-        {config.preroll
-          ? <>
-              <p className="text-[15px] text-gray-900">{config.preroll}</p>
-              <AudioPlayer compact noBg noDurations dureeLabel="00:00:07" />
-            </>
-          : <p className="text-sm text-gray-400 italic">Aucun habillage</p>
-        }
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className={ROLL_PILL}>Post-roll</span>
-        {config.postroll
-          ? <>
-              <p className="text-[15px] text-gray-900">{config.postroll}</p>
-              <AudioPlayer compact noBg noDurations dureeLabel="00:00:07" />
-            </>
-          : <p className="text-sm text-gray-400 italic">Aucun habillage</p>
-        }
-      </div>
     </div>
   )
 }

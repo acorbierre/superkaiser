@@ -6,10 +6,11 @@ import { SectionTitle } from '@/components/ui/section-title'
 import { SelectField } from '@/components/ui/select-field'
 import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { CARD, LINK, INPUT, BTN_PRIMARY, LABEL } from '@/lib/styles'
+import { CanauxToggle, NomRegleField } from '@/components/qualipo/habillage-shared'
+import { CARD, LINK, INPUT, ROLL_PILL, BTN_PRIMARY, LABEL } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
-import { STATION } from '@/data/constants'
+import { STATION, EMISSIONS_IMAGES } from '@/data/constants'
 import {
   getRegleById, addRegle, updateRegle,
   mockEpisodeCount, formatDateFr,
@@ -18,14 +19,6 @@ import {
   MODE_LABELS, EMPTY_CONFIG, defaultConfigJours,
   type ModeTemporalite, type RollConfig, type JourSemaine,
 } from '@/data/regles-store'
-
-const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
-
-const EMISSIONS_IMAGES: Record<string, string> = {
-  'À voix nue':              '/emissions/sc_a_voix_nue_1400.jpg',
-  'Affaires étrangères':     '/emissions/sc_affaires-etrangeres.png',
-  'Le cours de l\'histoire': '/emissions/sc_sc_le-cours-de-l-histoire.png',
-}
 
 // ── 2 colonnes pré/post-roll avec player ──────────────────────────────────────
 
@@ -289,16 +282,7 @@ export default function NouvelleReglePage() {
               <div className="flex flex-col gap-6 mt-6">
 
                 {/* Nom de la règle */}
-                <div className="flex flex-col gap-2">
-                  <span className={LABEL}>Nom de la règle (facultatif)</span>
-                  <input
-                    type="text"
-                    value={nom}
-                    onChange={e => setNom(e.target.value)}
-                    placeholder="Ex : Habillage spécial été"
-                    className={`${INPUT} w-full max-w-md`}
-                  />
-                </div>
+                <NomRegleField value={nom} onChange={setNom} />
 
                 {/* Période */}
                 <div className="flex flex-col gap-2">
@@ -369,16 +353,7 @@ export default function NouvelleReglePage() {
                 )}
 
                 {/* Interne / Externe */}
-                <div className="flex gap-5">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={interne} onCheckedChange={setInterne} />
-                    <span className="text-[15px] text-gray-700">Interne</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Switch checked={externe} onCheckedChange={setExterne} />
-                    <span className="text-[15px] text-gray-700">Externe</span>
-                  </label>
-                </div>
+                <CanauxToggle interne={interne} onInterneChange={setInterne} externe={externe} onExterneChange={setExterne} />
 
                 {/* Actions */}
                 <div className="flex items-center gap-3">

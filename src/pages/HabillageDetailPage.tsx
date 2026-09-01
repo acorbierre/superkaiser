@@ -1,11 +1,5 @@
 import { useState, useMemo } from 'react'
 import { ArrowLeft, Copy, Check, Heart, Calendar, List } from 'lucide-react'
-
-const EMISSIONS_IMAGES: Record<string, string> = {
-  'À voix nue':              '/emissions/sc_a_voix_nue_1400.jpg',
-  'Affaires étrangères':     '/emissions/sc_affaires-etrangeres.png',
-  'Le cours de l\'histoire': '/emissions/sc_sc_le-cours-de-l-histoire.png',
-}
 import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { SectionTitle } from '@/components/ui/section-title'
@@ -16,7 +10,7 @@ import AudioPlayer from '@/components/qualipo/audio-player'
 import { CARD, LINK } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
-import { STATION } from '@/data/constants'
+import { STATION, EMISSIONS_IMAGES, FALLBACK_DIFFUSE_AT, FALLBACK_LIBERATION_AT } from '@/data/constants'
 import { getRegles, formatDateFr } from '@/data/regles-store'
 
 function extractBR(programme: string): string {
@@ -38,8 +32,8 @@ export default function HabillageDetailPage() {
   }, [titre, type])
 
   const fallback = {
-    diffuseAt: '15 juin 2026 à 09h00',
-    liberationAt: '22 juin 2026 à 09h00',
+    diffuseAt: FALLBACK_DIFFUSE_AT,
+    liberationAt: FALLBACK_LIBERATION_AT,
     podcastPrincipalLabel: emission ?? titre ?? 'Émission',
     numeroMagnetotheque: '2026-0615-FC',
   }

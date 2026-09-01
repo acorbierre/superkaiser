@@ -4,30 +4,18 @@ import { PageTitle } from '@/components/ui/page-title'
 import { ItemTitle } from '@/components/ui/item-title'
 import { SectionTitle } from '@/components/ui/section-title'
 import { SelectField } from '@/components/ui/select-field'
-import { Switch } from '@/components/ui/switch'
 import AudioPlayer from '@/components/qualipo/audio-player'
-import { CARD, LINK, INPUT, LABEL, BTN_PRIMARY } from '@/lib/styles'
+import { CanauxToggle, NomRegleField } from '@/components/qualipo/habillage-shared'
+import { CARD, LINK, ROLL_PILL, BTN_PRIMARY } from '@/lib/styles'
 import { useNavigation } from '@/contexts/navigation-context'
 import { sons } from '@/data/sons'
-import { STATION } from '@/data/constants'
+import { STATION, EMISSIONS_IMAGES, FALLBACK_DIFFUSE_AT, FALLBACK_LIBERATION_AT } from '@/data/constants'
 import {
   getHabillageEpisode, setHabillageEpisode,
   SONS_PREROLL, SONS_POSTROLL,
 } from '@/data/habillage-episode-store'
 
-const ROLL_PILL = 'self-start inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] text-blue-rf bg-blue-rf/10'
-
-const EMISSIONS_IMAGES: Record<string, string> = {
-  'À voix nue':              '/emissions/sc_a_voix_nue_1400.jpg',
-  'Affaires étrangères':     '/emissions/sc_affaires-etrangeres.png',
-  'Le cours de l\'histoire': '/emissions/sc_sc_le-cours-de-l-histoire.png',
-}
-
-const FALLBACK = {
-  diffuseAt:   '15 juin 2026 à 09h00',
-  liberationAt: '22 juin 2026 à 09h00',
-  mid:         '2026-0615-FC',
-}
+const FALLBACK_MID = '2026-0615-FC'
 
 export default function HabillageEpisodePage() {
   const { params, navigate } = useNavigation()
@@ -44,8 +32,8 @@ export default function HabillageEpisodePage() {
   const son = useMemo(() => sons.find(s => s.detail.titreComplet === episodeTitre) ?? null, [episodeTitre])
   const emissionImage = EMISSIONS_IMAGES[emissionTitre] ?? null
 
-  const displayDiffuseAt = son?.detail.diffuseAt ?? FALLBACK.diffuseAt
-  const displayMID       = son?.numeroMagnetotheque ?? FALLBACK.mid
+  const displayDiffuseAt = son?.detail.diffuseAt ?? FALLBACK_DIFFUSE_AT
+  const displayMID       = son?.numeroMagnetotheque ?? FALLBACK_MID
   const displayEmission  = son?.emission ?? emissionTitre
 
   function handleValider() {
@@ -112,15 +100,8 @@ export default function HabillageEpisodePage() {
               <ItemTitle>{ruleLabel ? `Règle du ${ruleLabel}` : 'Habillage'}</ItemTitle>
 
               {/* Nom de la règle */}
-              <div className="flex flex-col gap-2 mt-6">
-                <span className={LABEL}>Nom de la règle (facultatif)</span>
-                <input
-                  type="text"
-                  value={nom}
-                  onChange={e => setNom(e.target.value)}
-                  placeholder="Ex : Habillage spécial été"
-                  className={`${INPUT} w-full max-w-md`}
-                />
+              <div className="mt-6">
+                <NomRegleField value={nom} onChange={setNom} />
               </div>
 
               {/* 2 colonnes pré/post-roll */}
@@ -144,15 +125,8 @@ export default function HabillageEpisodePage() {
               </div>
 
               {/* Interne / Externe */}
-              <div className="flex gap-5 mt-6">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <Switch checked={interne} onCheckedChange={setInterne} />
-                  <span className="text-[15px] text-gray-700">Interne</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <Switch checked={externe} onCheckedChange={setExterne} />
-                  <span className="text-[15px] text-gray-700">Externe</span>
-                </label>
+              <div className="mt-6">
+                <CanauxToggle interne={interne} onInterneChange={setInterne} externe={externe} onExterneChange={setExterne} />
               </div>
 
               {/* Actions */}
@@ -172,7 +146,7 @@ export default function HabillageEpisodePage() {
               <ItemTitle>Date de diffusion</ItemTitle>
               <p className="mt-3 text-sm text-gray-600">{displayDiffuseAt}</p>
               <div className="mt-6"><ItemTitle>Date de libération du son</ItemTitle></div>
-              <p className="mt-3 text-sm text-gray-600">{FALLBACK.liberationAt}</p>
+              <p className="mt-3 text-sm text-gray-600">{FALLBACK_LIBERATION_AT}</p>
               <hr className="border-gray-100 mt-6 mb-6" />
               <ItemTitle>Podcast</ItemTitle>
               <button
