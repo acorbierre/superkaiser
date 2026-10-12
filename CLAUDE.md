@@ -47,3 +47,6 @@ Toujours lancer `npm run build` avant tout `git push`. Le compilateur TypeScript
 - Ne pas re-lire un fichier déjà lu dans la session si son contenu n'a pas changé.
 - Préférer des recherches ciblées (Grep/Glob) à des explorations larges.
 - Travailler composant par composant, pas en masse.
+- Jamais de screenshot Browser-pane pour vérifier un changement UI : s'appuyer sur `tsc --noEmit` / `npm run build`, et sur des vérifications DOM ciblées (`getBoundingClientRect`, `textContent`, classes) seulement en cas de doute réel sur un comportement runtime.
+- Préférer `Edit` (diff ciblé) à `Write` (réécriture complète) sur un fichier existant.
+- Grouper les petites modifications liées en un minimum d'allers-retours plutôt qu'un appel d'outil par ligne changée.

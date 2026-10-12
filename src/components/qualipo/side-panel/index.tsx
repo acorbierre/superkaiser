@@ -5,6 +5,7 @@ import { BTN_PRIMARY, CARD, LINK } from '@/lib/styles'
 import AudioPlayer from '@/components/qualipo/audio-player'
 import { StepIndicator, STEPS, getStepState, type StepState } from './step-indicator'
 import { TraitementCard } from './traitement-card'
+import { ContributionCard } from './contribution-card'
 import { DistributionCard } from './distribution-card'
 import { ConfirmModal } from './confirm-modal'
 
@@ -23,7 +24,7 @@ export default function SidePanel({ son, onClose }: Props) {
   ]
 
   function effectiveStepState(statut: StatutSon, index: number): StepState {
-    if ((statut === 'livre_plusieurs_fois' || statut === 'mid_non_conforme') && index === 0 && conservedFichier) return 'done'
+    if (statut === 'livre_plusieurs_fois' && conservedFichier) return index === 0 ? 'done' : 'pending'
     return getStepState(statut, index)
   }
 
@@ -107,6 +108,9 @@ export default function SidePanel({ son, onClose }: Props) {
                 const state = effectiveStepState(son.statut, i)
                 const isDone    = state === 'done'
                 const isError   = state === 'error'
+                const isScheduled = state === 'scheduled'
+                // Étape en erreur uniquement parce qu'une étape précédente a échoué : pas de contenu
+                const isCascade = isError && i > 0 && effectiveStepState(son.statut, i - 1) !== 'done'
                 const isPending = state === 'pending'
                 const isLast    = i === STEPS.length - 1
 
@@ -115,7 +119,7 @@ export default function SidePanel({ son, onClose }: Props) {
                     <div className="flex flex-col items-center">
                       <StepIndicator state={state} />
                       {!isLast && (
-                        <div className={`w-[2px] flex-1 min-h-[24px] ${isDone ? 'bg-[#25bc95]' : 'bg-gray-200'}`} />
+                        <div className={`w-[2px] flex-1 min-h-[24px] ${isDone ? 'bg-[#25bc95]' : isError ? 'bg-red-500' : isScheduled ? 'bg-[#A845E4]' : 'bg-gray-200'}`} />
                       )}
                     </div>
 
@@ -131,8 +135,13 @@ export default function SidePanel({ son, onClose }: Props) {
                         )}
                       </div>
 
-                      {(isDone || isError) && (
-                        isError && son.statut === 'livre_plusieurs_fois' ? (
+                      {(isDone || isScheduled || isError) && (
+                        i === 1 && isScheduled ? (
+                          /* ── Libération programmée ── */
+                          <div className="rounded-lg border border-[#A845E4]/30 bg-[#f6ecfd] p-4 text-[14px]">
+                            <p className="text-[#A845E4]">La date de libération du son est programmée au {son.liberationAt}.</p>
+                          </div>
+                        ) : i === 0 && isError && son.statut === 'livre_plusieurs_fois' ? (
                           /* ── Vue doublon non résolu ── */
                           <div className="space-y-3">
                             <div className="rounded-lg border border-red-200 bg-[#ffe2e2] p-4 text-[14px]">
@@ -177,6 +186,14 @@ export default function SidePanel({ son, onClose }: Props) {
                             fichier={`PAD NET_MFO_${son.numeroMagnetotheque}`}
                             dureeLabel={son.dureeReelle ?? '00:13:00'}
                           />
+                        ) : i === 1 && isCascade ? (
+                          /* ── Étape 2 en cascade : son non reçu ── */
+                          <div className="rounded-lg border border-red-200 bg-[#ffe2e2] px-4 py-3 text-[14px] flex items-center gap-2.5">
+                            <div className="size-5 rounded-full bg-red-500 flex items-center justify-center shrink-0">
+                              <X className="size-3 text-white" strokeWidth={3} />
+                            </div>
+                            <p className="text-red-600">Son non reçu.</p>
+                          </div>
                         ) : i === 1 ? (
                           /* ── Étape 2 ── */
                           <div className="space-y-3">
@@ -187,9 +204,12 @@ export default function SidePanel({ son, onClose }: Props) {
                             )}
                             <TraitementCard hasError={son.statut === 'droits_fermes'} />
                           </div>
+                        ) : i === 2 ? (
+                          /* ── Étape 3 : Contribution ── */
+                          <ContributionCard son={son} />
                         ) : (
-                          /* ── Étape 3 ── */
-                          <DistributionCard emission={son.emission} />
+                          /* ── Étape 4 ── */
+                          <DistributionCard emission={son.emission} error={isError} />
                         )
                       )}
                     </div>

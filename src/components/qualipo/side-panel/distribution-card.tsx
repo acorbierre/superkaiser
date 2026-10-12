@@ -1,30 +1,31 @@
-import { Check, ExternalLink } from 'lucide-react'
+import { Check, ExternalLink, X } from 'lucide-react'
 import { CARD, LINK } from '@/lib/styles'
 
-function GreenCheck() {
+function StatusIcon({ error }: { error: boolean }) {
+  const Icon = error ? X : Check
   return (
-    <div className="size-6 rounded-full bg-[#25bc95] flex items-center justify-center shrink-0">
-      <Check className="size-3.5 text-white" strokeWidth={3} />
+    <div className={`size-6 rounded-full ${error ? 'bg-red-500' : 'bg-[#25bc95]'} flex items-center justify-center shrink-0`}>
+      <Icon className="size-3.5 text-white" strokeWidth={3} />
     </div>
   )
 }
 
-export function DistributionCard({ emission }: { emission: string }) {
+export function DistributionCard({ emission, error = false }: { emission: string; error?: boolean }) {
   return (
     <div className="space-y-3">
       <div className={CARD}>
         <div className="space-y-3">
           <div className="flex items-center gap-2.5">
-            <GreenCheck />
+            <StatusIcon error={error} />
             <span className={LINK}>Site web <ExternalLink className="size-3.5" /></span>
           </div>
           <div className="flex items-center gap-2.5">
-            <GreenCheck />
+            <StatusIcon error={error} />
             <span className="text-[15px] text-[#333]">Application Radio France</span>
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <GreenCheck />
+              <StatusIcon error={error} />
               <span className="text-[15px] text-[#333]">RSS</span>
             </div>
             <div className="pl-8 space-y-1.5">

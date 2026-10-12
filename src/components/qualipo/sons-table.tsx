@@ -21,6 +21,7 @@ const BG: Record<StatutSon, string> = {
   livre_plusieurs_fois: 'bg-[#ffcfa8e3]',
   droits_fermes:       'bg-[#FFB2B7]',
   mid_non_conforme:    'bg-[#FFB2B7]',
+  liberation_programmee: 'bg-[#FFB2B7]',
 }
 
 const BORDER: Record<StatutSon, string> = {
@@ -31,6 +32,7 @@ const BORDER: Record<StatutSon, string> = {
   livre_plusieurs_fois: 'border-[#f5b469]',
   droits_fermes:       'border-[#ea9797]',
   mid_non_conforme:    'border-[#ea9797]',
+  liberation_programmee: 'border-[#ea9797]',
 }
 
 interface Props {
@@ -52,6 +54,8 @@ function StatutCell({ son }: { son: Son }) {
       return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : droits fermés</span>
     case 'mid_non_conforme':
       return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : MID non conforme</span>
+    case 'liberation_programmee':
+      return <span className="flex items-center gap-1.5"><X className="size-4 shrink-0 text-red-500" />Non disponible : libération programmée</span>
     case 'attente':
       return <span className="flex items-center gap-1.5"><Clock className="size-4 shrink-0 text-gray-500" />{son.minutesRestantes != null ? `Fin dans ${son.minutesRestantes} min` : 'En attente'}</span>
     case 'duree_incoherente':
@@ -71,6 +75,7 @@ function matchesFiltres(son: Son, f: FiltresState, recherche: string): boolean {
   if (son.statut === 'livre_plusieurs_fois' && !f.livresPlusieurs)     return false
   if (son.statut === 'droits_fermes'       && !f.nonDisponibles)       return false
   if (son.statut === 'mid_non_conforme'    && !f.nonDisponibles)       return false
+  if (son.statut === 'liberation_programmee' && !f.nonDisponibles)     return false
   return true
 }
 

@@ -6,6 +6,7 @@ export type StatutSon =
   | 'livre_plusieurs_fois'
   | 'droits_fermes'
   | 'mid_non_conforme'
+  | 'liberation_programmee'
 
 export interface SonDetail {
   titreComplet: string
@@ -31,6 +32,8 @@ export interface Son {
   // duree_incoherente
   dureeAttendue?: string   // ex: "58min 00s"
   dureeReelle?: string     // ex: "1h 03min 12s"
+  // liberation_programmee
+  liberationAt?: string    // ex: "lundi XX/XX/2026 à 18h05"
   // attente
   minutesRestantes?: number
   detail: SonDetail
@@ -44,6 +47,7 @@ export const STATUT_LABEL: Record<StatutSon, string> = {
   livre_plusieurs_fois: 'Livré plusieurs fois (doublons)',
   droits_fermes:       'Non disponible : droits fermés',
   mid_non_conforme:    'Non disponible : MID non conforme',
+  liberation_programmee: 'Non disponible : libération programmée',
 }
 
 export const sons: Son[] = [
@@ -241,6 +245,23 @@ export const sons: Son[] = [
       publiAt: '19/05/2025 à 16:00',
       programme: 'La méthode scientifique (BR : 10011)',
       podcastPrincipalLabel: 'La méthode scientifique',
+    },
+  },
+  {
+    id: '11b',
+    date: '19 Mai',
+    debut: '17:00',
+    fin: '17:59',
+    emission: 'Le temps du débat',
+    titre: 'Faut-il réformer les retraites ?',
+    numeroMagnetotheque: '2025C3305S0018',
+    statut: 'liberation_programmee',
+    liberationAt: 'lundi XX/XX/2026 à 18h05',
+    detail: {
+      titreComplet: 'Le temps du débat — Faut-il réformer les retraites ?',
+      diffuseAt: '19/05/2025 à 17:00',
+      publiAt: '19/05/2025 à 17:00',
+      programme: 'Le temps du débat (BR : 10018)',
     },
   },
   {
